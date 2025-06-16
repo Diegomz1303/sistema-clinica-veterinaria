@@ -28,7 +28,7 @@
         
         <div class="detalle-container">
 
-            <!-- === Columna Izquierda: Toda la Información de Consulta === -->
+            <!-- Columna Izquierda: Información de Consulta -->
             <div class="info-columna">
                 <div class="info-card">
                     <h3>Datos del Paciente</h3>
@@ -46,18 +46,15 @@
                     <p><span class="info-label">Email:</span> <span id="detalle-email">Cargando...</span></p>
                     <p><span class="info-label">Dirección:</span> <span id="detalle-direccion">Cargando...</span></p>
                 </div>
-
-                <!-- === SECCIÓN DE VISITAS MOVIDA AQUÍ === -->
                 <div class="info-card">
                     <h4>Visitas Anteriores</h4>
                     <div id="historial-lista-container">
                         <p>Cargando historial...</p>
                     </div>
                 </div>
-
             </div>
 
-            <!-- === Columna Derecha: Solo Acciones === -->
+            <!-- Columna Derecha: Formulario de Acciones -->
             <div class="historial-columna">
                 <h3>Agregar Visita al Historial</h3>
                 <div class="info-card">
@@ -73,17 +70,25 @@
                             </select>
                         </div>
                         <div class="form-group">
-                            <label for="motivo-consulta">Motivo de la Consulta:</label>
+                            <label for="motivo-consulta">Motivo de la Consulta (Síntomas):</label>
                             <input type="text" id="motivo-consulta" required>
                         </div>
+                        
+                        <!-- === CAMPO MOVIDO AQUÍ === -->
+                        <div class="form-group">
+                            <label for="examenes-complementarios">Exámenes Complementarios (Solicitados/Resultados):</label>
+                            <textarea id="examenes-complementarios" rows="3"></textarea>
+                        </div>
+
                         <div class="form-group">
                             <label for="diagnostico">Diagnóstico:</label>
                             <textarea id="diagnostico" rows="3" required></textarea>
                         </div>
-                         <div class="form-group">
+                        <div class="form-group">
                             <label for="tratamiento">Tratamiento:</label>
                             <textarea id="tratamiento" rows="3"></textarea>
                         </div>
+
                         <label>Signos Vitales</label>
                         <div class="form-row">
                             <div class="form-group">
@@ -108,12 +113,21 @@
                             <label for="proxima-cita">Próxima Cita:</label>
                             <input type="date" id="proxima-cita">
                         </div>
+                        
+                        <div class="form-group">
+                            <label for="doctor-encargado">Doctor Encargado:</label>
+                            <select id="doctor-encargado" required>
+                                <option value="" disabled selected>Seleccionar doctor...</option>
+                                <option value="Dr. Willian Armando Alvarez Ramos">Dr. Willian Armando Alvarez Ramos</option>
+                                <option value="Dra. Tamara Abigail Alvarez Flores">Dra. Tamara Abigail Alvarez Flores</option>
+                            </select>
+                        </div>
+
                         <button type="submit" class="boton-primario">Guardar Visita</button>
                         <div id="mensaje-visita" class="mensaje" style="display: none;"></div>
                     </form>
                 </div>
             </div>
-
         </div>
     </main>
 
@@ -127,11 +141,8 @@
                 <p class="detalle-linea"><strong>Tipo:</strong> <span id="visita-tipo"></span></p>
                 <p class="detalle-linea"><strong>Motivo:</strong> <span id="visita-motivo"></span></p>
                 <hr>
-                <p class="detalle-linea"><strong>Signos Vitales:</strong></p>
-                <p><span class="info-label">Peso:</span> <span id="visita-peso"></span></p>
-                <p><span class="info-label">Temperatura:</span> <span id="visita-temperatura"></span></p>
-                <p><span class="info-label">Frec. Cardíaca:</span> <span id="visita-frec-cardiaca"></span></p>
-                <p><span class="info-label">Frec. Respiratoria:</span> <span id="visita-frec-resp"></span></p>
+                <p class="detalle-linea"><strong>Exámenes Complementarios:</strong></p>
+                <p id="visita-examenes" style="white-space: pre-wrap;"></p>
                 <hr>
                 <p class="detalle-linea"><strong>Diagnóstico:</strong></p>
                 <p id="visita-diagnostico" style="white-space: pre-wrap;"></p>
@@ -139,14 +150,20 @@
                 <p class="detalle-linea"><strong>Tratamiento:</strong></p>
                 <p id="visita-tratamiento" style="white-space: pre-wrap;"></p>
                 <hr>
+                <p class="detalle-linea"><strong>Signos Vitales:</strong></p>
+                <p><span class="info-label">Peso:</span> <span id="visita-peso"></span></p>
+                <p><span class="info-label">Temperatura:</span> <span id="visita-temperatura"></span></p>
+                <p><span class="info-label">Frec. Cardíaca:</span> <span id="visita-frec-cardiaca"></span></p>
+                <p><span class="info-label">Frec. Respiratoria:</span> <span id="visita-frec-resp"></span></p>
+                <hr>
                 <p class="detalle-linea"><strong>Próxima Cita:</strong> <span id="visita-proxima-cita"></span></p>
                 <hr>
+                <p class="detalle-linea"><strong>Atendido por:</strong> <span id="visita-doctor"></span></p>
+                <hr>
                 <p class="detalle-linea"><strong>Archivos Adjuntos:</strong></p>
-                <div id="visita-archivos-lista">
-                </div>
+                <div id="visita-archivos-lista"></div>
             </div>
         </div>
     </div>
-
 </body>
 </html>

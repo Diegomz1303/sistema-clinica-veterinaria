@@ -1,6 +1,9 @@
 <?php
 // backend/api_agregar_visita.php
 
+// === LÍNEA AÑADIDA: Establecer la zona horaria de Perú ===
+date_default_timezone_set('America/Lima');
+
 require 'db_connection.php';
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
@@ -17,8 +20,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     try {
         $sql_visita = "INSERT INTO historial_clinico 
-            (id_paciente, fecha_visita, tipo_visita, motivo_consulta, diagnostico, tratamiento, peso_kg, temperatura, frecuencia_cardiaca, frecuencia_respiratoria, proxima_cita) 
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            (id_paciente, fecha_visita, tipo_visita, motivo_consulta, diagnostico, tratamiento, examenes_complementarios, peso_kg, temperatura, frecuencia_cardiaca, frecuencia_respiratoria, proxima_cita, doctor_encargado) 
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         
         $stmt_visita = $conn->prepare($sql_visita);
 
@@ -27,15 +30,28 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $motivo_consulta = $_POST['motivo_consulta'] ?? '';
         $diagnostico = $_POST['diagnostico'] ?? '';
         $tratamiento = $_POST['tratamiento'] ?? null;
+        $examenes_complementarios = $_POST['examenes_complementarios'] ?? null;
         $peso_kg = !empty($_POST['peso']) ? floatval($_POST['peso']) : null;
         $temperatura = !empty($_POST['temperatura']) ? floatval($_POST['temperatura']) : null;
         $frec_cardiaca = !empty($_POST['frecuencia_cardiaca']) ? intval($_POST['frecuencia_cardiaca']) : null;
         $frec_respiratoria = !empty($_POST['frecuencia_respiratoria']) ? intval($_POST['frecuencia_respiratoria']) : null;
         $proxima_cita = !empty($_POST['proxima_cita']) ? $_POST['proxima_cita'] : null;
+        $doctor_encargado = $_POST['doctor_encargado'] ?? null;
 
-        $stmt_visita->bind_param("issssdiiiis", 
-            $paciente_id, $fecha_visita, $tipo_visita, $motivo_consulta, $diagnostico, $tratamiento, $peso_kg,
-            $temperatura, $frec_cardiaca, $frec_respiratoria, $proxima_cita
+        $stmt_visita->bind_param("issssssddiiss", 
+            $paciente_id, 
+            $fecha_visita, 
+            $tipo_visita,
+            $motivo_consulta, 
+            $diagnostico, 
+            $tratamiento,
+            $examenes_complementarios,
+            $peso_kg,
+            $temperatura,
+            $frec_cardiaca,
+            $frec_respiratoria,
+            $proxima_cita,
+            $doctor_encargado
         );
 
         $stmt_visita->execute();
@@ -77,7 +93,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
         $conn->commit();
         http_response_code(201);
-        echo json_encode(['mensaje' => 'Visita y archivos guardados con éxito.']);
+        echo json_encode(['mensaje' => 'Visita guardada con éxito.']);
 
     } catch (Exception $e) {
         $conn->rollback();

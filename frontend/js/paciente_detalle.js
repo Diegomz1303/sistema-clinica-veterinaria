@@ -70,12 +70,15 @@ document.addEventListener('DOMContentLoaded', function() {
             });
     }
 
+    // --- Lógica del Modal de Detalles de Visita (CORREGIDO) ---
     historialContainer.addEventListener('click', function(event) {
         const resumen = event.target.closest('.visita-resumen');
         if (!resumen) return;
         const visitaIndex = resumen.dataset.visitaIndex;
         const visita = historialData[visitaIndex];
+
         if (visita) {
+            // Rellenar todos los campos del modal
             document.getElementById('visita-fecha').textContent = new Date(visita.fecha_visita).toLocaleString('es-ES');
             document.getElementById('visita-tipo').textContent = visita.tipo_visita || 'No especificado';
             document.getElementById('visita-motivo').textContent = visita.motivo_consulta;
@@ -85,8 +88,13 @@ document.addEventListener('DOMContentLoaded', function() {
             document.getElementById('visita-frec-resp').textContent = visita.frecuencia_respiratoria ? `${visita.frecuencia_respiratoria} rpm` : 'No registrado';
             document.getElementById('visita-diagnostico').textContent = visita.diagnostico;
             document.getElementById('visita-tratamiento').textContent = visita.tratamiento || 'No especificado';
-            document.getElementById('visita-proxima-cita').textContent = visita.proxima_cita ? new Date(visita.proxima_cita).toLocaleDateString('es-ES') : 'No agendada';
+            document.getElementById('visita-examenes').textContent = visita.examenes_complementarios || 'Ninguno';
             
+            // === LÍNEA CORREGIDA ===
+            document.getElementById('visita-proxima-cita').textContent = (visita.proxima_cita && visita.proxima_cita !== '0000-00-00') ? new Date(visita.proxima_cita + 'T00:00:00').toLocaleDateString('es-ES') : 'No agendada';
+            document.getElementById('visita-doctor').textContent = visita.doctor_encargado || 'No especificado';
+            
+            // Lógica para renderizar archivos adjuntos
             const listaArchivosDiv = document.getElementById('visita-archivos-lista');
             listaArchivosDiv.innerHTML = ''; 
             if (visita.archivos && visita.archivos.length > 0) {
@@ -104,6 +112,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
     
+    // Cerrar modal
     cerrarModalVisita.addEventListener('click', () => modalVisita.style.display = 'none');
     window.addEventListener('click', (event) => {
         if (event.target == modalVisita) modalVisita.style.display = 'none';
@@ -114,26 +123,27 @@ document.addEventListener('DOMContentLoaded', function() {
         event.preventDefault();
         
         const formData = new FormData();
-
-        // Añadir todos los campos de texto
         formData.append('paciente_id', pacienteId);
         formData.append('tipo_visita', document.getElementById('tipo-visita').value);
         formData.append('motivo_consulta', document.getElementById('motivo-consulta').value);
         formData.append('diagnostico', document.getElementById('diagnostico').value);
         formData.append('tratamiento', document.getElementById('tratamiento').value);
+        formData.append('examenes_complementarios', document.getElementById('examenes-complementarios').value); // Nuevo campo
         formData.append('peso', document.getElementById('peso').value);
         formData.append('temperatura', document.getElementById('temperatura').value);
         formData.append('frecuencia_cardiaca', document.getElementById('frecuencia-cardiaca').value);
         formData.append('frecuencia_respiratoria', document.getElementById('frecuencia-respiratoria').value);
         formData.append('proxima_cita', document.getElementById('proxima-cita').value);
-        
-        // Añadir los archivos
+        formData.append('doctor_encargado', document.getElementById('doctor-encargado').value); // Nuevo campo
+
         const inputArchivos = document.getElementById('archivos');
         for (let i = 0; i < inputArchivos.files.length; i++) {
             formData.append('archivos[]', inputArchivos.files[i]);
         }
+        
+        const mensajeDiv = document.getElementById('mensaje-visita');
+        mensajeDiv.style.display = 'none';
 
-        // Enviar el FormData
         fetch('http://localhost/veterinaria-app/backend/api_agregar_visita.php', {
             method: 'POST',
             body: formData
@@ -141,16 +151,19 @@ document.addEventListener('DOMContentLoaded', function() {
         .then(response => response.json())
         .then(data => {
             if (data.error) {
-                alert('Error: ' + data.error);
+                mensajeDiv.textContent = 'Error: ' + data.error;
+                mensajeDiv.className = 'mensaje error';
+                mensajeDiv.style.display = 'block';
             } else {
-                alert(data.mensaje);
+                mensajeDiv.textContent = data.mensaje;
+                mensajeDiv.className = 'mensaje exito';
+                mensajeDiv.style.display = 'block';
                 formNuevaVisita.reset();
-                cargarDetallesPaciente(pacienteId); 
+                cargarDetallesPaciente(pacienteId);
+                setTimeout(() => {
+                    mensajeDiv.style.display = 'none';
+                }, 4000);
             }
-        })
-        .catch(error => {
-            console.error('Error al agregar visita:', error);
-            alert('Ocurrió un error de conexión al guardar la visita.');
         });
     });
 });
