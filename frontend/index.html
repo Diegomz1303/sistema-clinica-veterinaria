@@ -15,35 +15,45 @@
             <img src="img/logo_veterinaria.jpg" alt="Logo Veterinaria Alvarez">
             <h1>Veterinaria Alvarez - Historial Clínico</h1>
         </div>
+        <!-- Este contenedor debe estar dentro del header -->
         <div class="user-session">
+            <!-- Añadimos el span de nuevo para compatibilidad con JS, pero lo ocultaremos -->
+            <span style="display: none;">Bienvenido, <strong id="username-display"></strong></span>
             <button id="btn-logout" class="boton-secundario">Cerrar Sesión</button>
         </div>
     </header>
 
     <main>
         <section id="lista-pacientes">
-            <h2>Lista de Pacientes</h2>
+            <!-- El h2 lo movemos a los controles para un mejor diseño -->
             <div class="controles-tabla">
-                <div class="controles-busqueda">
-                    <input type="text" id="input-busqueda-unificada" placeholder="Buscar por ID o Nombre de Paciente...">
+                <h2>Lista de Pacientes</h2>
+                <div class="acciones-derecha">
+                    <div class="search-wrapper">
+                         <!-- He restaurado el ícono de búsqueda para que coincida con el CSS -->
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="search-icon"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                        <input type="text" id="input-busqueda-unificada" placeholder="Buscar paciente...">
+                    </div>
+                    <button id="btn-agregar-paciente" class="boton-primario">Agregar Paciente</button>
                 </div>
-                <button id="btn-agregar-paciente" class="boton-primario">Agregar Paciente</button>
             </div>
-            <table id="tabla-pacientes">
-                <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>Nombre</th>
-                        <th>Especie</th>
-                        <th>Raza</th>
-                        <th>Propietario</th>
-                        <th>Acciones</th> <!-- === NUEVA COLUMNA === -->
-                    </tr>
-                </thead>
-                <tbody id="cuerpo-tabla-pacientes">
-                    <!-- Filas de pacientes se insertarán aquí -->
-                </tbody>
-            </table>
+            <div class="tabla-container">
+                <table id="tabla-pacientes">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Nombre</th>
+                            <th>Especie</th>
+                            <th>Raza</th>
+                            <th>Propietario</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody id="cuerpo-tabla-pacientes">
+                        <!-- Filas de pacientes -->
+                    </tbody>
+                </table>
+            </div>
         </section>
     </main>
 
@@ -51,63 +61,58 @@
     <div id="modal-formulario" class="modal">
         <div class="modal-contenido">
             <span class="cerrar-modal">&times;</span>
-            <!-- El título del modal se cambiará con JS -->
             <h2 id="modal-titulo">Agregar Nuevo Propietario y Paciente</h2>
             <form id="formulario-agregar">
-                <!-- El contenido del formulario no cambia -->
                 <h3>Datos del Propietario</h3>
-                    <div class="form-group">
-                        <label for="nombre-propietario">Nombre:</label>
-                        <input type="text" id="nombre-propietario" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="apellido-propietario">Apellido:</label>
-                        <input type="text" id="apellido-propietario" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="telefono-propietario">Teléfono:</label>
-                        <input type="tel" id="telefono-propietario" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="email-propietario">Email:</label>
-                        <input type="email" id="email-propietario">
-                    </div>
-                     <div class="form-group">
-                        <label for="direccion-propietario">Dirección:</label>
-                        <input type="text" id="direccion-propietario">
-                    </div>
-
-                    <h3 style="margin-top: 20px;">Datos del Paciente</h3>
-                    <div class="form-group">
-                        <label for="nombre-paciente">Nombre:</label>
-                        <input type="text" id="nombre-paciente" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="especie-paciente">Especie:</label>
-                        <input type="text" id="especie-paciente" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="raza-paciente">Raza:</label>
-                        <input type="text" id="raza-paciente">
-                    </div>
-                    <div class="form-group">
-                        <label for="sexo-paciente">Sexo:</label>
-                        <select id="sexo-paciente" required>
-                            <option value="" disabled selected>Seleccionar...</option>
-                            <option value="Macho">Macho</option>
-                            <option value="Hembra">Hembra</option>
-                        </select>
-                    </div>
-                     <div class="form-group">
-                        <label for="fecha-nacimiento-paciente">Fecha de Nacimiento:</label>
-                        <input type="date" id="fecha-nacimiento-paciente">
-                    </div>
-                    <div class="form-group">
-                        <label for="color-paciente">Color:</label>
-                        <input type="text" id="color-paciente">
-                    </div>
-                
-                <!-- El texto del botón se cambiará con JS -->
+                <div class="form-group">
+                    <label for="nombre-propietario">Nombre:</label>
+                    <input type="text" id="nombre-propietario" required>
+                </div>
+                <div class="form-group">
+                    <label for="apellido-propietario">Apellido:</label>
+                    <input type="text" id="apellido-propietario" required>
+                </div>
+                <div class="form-group">
+                    <label for="telefono-propietario">Teléfono:</label>
+                    <input type="tel" id="telefono-propietario" required>
+                </div>
+                <div class="form-group">
+                    <label for="email-propietario">Email:</label>
+                    <input type="email" id="email-propietario">
+                </div>
+                 <div class="form-group">
+                    <label for="direccion-propietario">Dirección:</label>
+                    <input type="text" id="direccion-propietario">
+                </div>
+                <h3 style="margin-top: 20px;">Datos del Paciente</h3>
+                <div class="form-group">
+                    <label for="nombre-paciente">Nombre:</label>
+                    <input type="text" id="nombre-paciente" required>
+                </div>
+                <div class="form-group">
+                    <label for="especie-paciente">Especie:</label>
+                    <input type="text" id="especie-paciente" required>
+                </div>
+                <div class="form-group">
+                    <label for="raza-paciente">Raza:</label>
+                    <input type="text" id="raza-paciente">
+                </div>
+                <div class="form-group">
+                    <label for="sexo-paciente">Sexo:</label>
+                    <select id="sexo-paciente" required>
+                        <option value="" disabled selected>Seleccionar...</option>
+                        <option value="Macho">Macho</option>
+                        <option value="Hembra">Hembra</option>
+                    </select>
+                </div>
+                 <div class="form-group">
+                    <label for="fecha-nacimiento-paciente">Fecha de Nacimiento:</label>
+                    <input type="date" id="fecha-nacimiento-paciente">
+                </div>
+                <div class="form-group">
+                    <label for="color-paciente">Color:</label>
+                    <input type="text" id="color-paciente">
+                </div>
                 <button type="submit" id="btn-guardar-formulario" class="boton-primario">Guardar Paciente</button>
                 <div id="mensaje-formulario" class="mensaje"></div>
             </form>

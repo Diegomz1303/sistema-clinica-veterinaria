@@ -3,22 +3,58 @@
 main {
     max-width: 1200px;
     margin: 2rem auto;
+    padding: 0; /* Quitamos el padding para que la tarjeta de la sección ocupe todo */
+    background: none;
+    box-shadow: none;
+}
+
+#lista-pacientes {
     background: var(--color-superficie);
-    padding: 2.5rem;
+    padding: 2rem 2.5rem;
     border-radius: 12px;
     box-shadow: var(--sombra-caja);
 }
 
+/* === CONTROLES DE LA TABLA REDISEÑADOS === */
 .controles-tabla {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 1rem 0;
-    margin-bottom: 1rem;
+    padding-bottom: 1.5rem;
+    margin-bottom: 1.5rem;
+    border-bottom: 1px solid var(--color-borde);
+    flex-wrap: wrap; /* Para mejor responsividad */
+    gap: 1rem;
 }
 
-.controles-busqueda input {
-    padding: 10px 15px;
+.controles-tabla h2 {
+    margin: 0;
+    font-size: 1.8em;
+    color: var(--color-texto-principal);
+}
+
+.acciones-derecha {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+/* === BÚSQUEDA CON ÍCONO === */
+.search-wrapper {
+    position: relative;
+}
+
+.search-icon {
+    position: absolute;
+    top: 50%;
+    left: 15px;
+    transform: translateY(-50%);
+    color: var(--color-texto-secundario);
+    pointer-events: none; /* Para que se pueda hacer clic en el input a través del ícono */
+}
+
+.search-wrapper input {
+    padding: 10px 15px 10px 45px; /* Padding a la izquierda para el ícono */
     border: 1px solid var(--color-borde-oscuro);
     border-radius: 8px;
     width: 300px;
@@ -26,45 +62,95 @@ main {
     transition: all 0.3s ease;
 }
 
-.controles-busqueda input:focus {
+.search-wrapper input:focus {
     outline: none;
     border-color: var(--color-primario);
     box-shadow: 0 0 0 3px rgba(217, 35, 45, 0.2);
 }
 
-/* --- Estilos para la Tabla de Pacientes --- */
+/* === TABLA REDISEÑADA === */
+.tabla-container {
+    overflow-x: auto; /* Para responsividad en tablas */
+}
+
 table {
     width: 100%;
     border-collapse: collapse;
-    margin-top: 10px;
+    border-spacing: 0;
 }
 
 th, td {
-    padding: 15px;
+    padding: 16px;
     border: none;
-    border-bottom: 1px solid var(--color-borde);
     text-align: left;
     vertical-align: middle;
 }
 
 thead th {
     font-weight: 600;
-    font-size: 0.85em;
+    font-size: 0.8em;
     text-transform: uppercase;
+    letter-spacing: 0.5px;
     color: var(--color-texto-secundario);
-    border-bottom-width: 2px;
+    background-color: #f8f9fa; /* Un fondo muy ligero para la cabecera */
+    border-bottom: 2px solid var(--color-borde); /* Borde más grueso para la cabecera */
 }
 
 tbody tr {
+    border-bottom: 1px solid var(--color-borde);
     transition: background-color 0.2s ease;
 }
 
+tbody tr:last-child {
+    border-bottom: none; /* Quitar el borde de la última fila */
+}
+
 tbody tr:hover {
-    background-color: #e9ecef;
+    background-color: #f4f7f6; /* Un gris aún más claro para el hover */
     cursor: pointer;
 }
 
+/* Hacer que el nombre del paciente resalte */
+tbody td:nth-child(2) {
+    font-weight: 500;
+    color: var(--color-texto-principal);
+}
+
+/* === BOTÓN EDITAR REDISEÑADO === */
+.boton-editar {
+    background-color: var(--color-secundario); /* Usamos el gris secundario para consistencia */
+    color: white;
+    border: none;
+    padding: 8px 14px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.85em;
+    font-weight: 600;
+    transition: background-color 0.2s ease;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.boton-editar:hover {
+    background-color: var(--color-secundario-hover);
+}
+
+/* Añadimos un ícono de lápiz al botón de editar usando un SVG como máscara */
+.boton-editar::before {
+    content: '';
+    display: inline-block;
+    width: 14px;
+    height: 14px;
+    background-color: white;
+    -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 20h9'%3E%3C/path%3E%3Cpath d='M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z'%3E%3C/path%3E%3C/svg%3E");
+    mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 20h9'%3E%3C/path%3E%3Cpath d='M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z'%3E%3C/path%3E%3C/svg%3E");
+    mask-size: contain;
+    mask-repeat: no-repeat;
+}
+
 /* --- Estilos para el formulario en el modal de index.html --- */
+/* (Esta sección se mantiene igual ya que sus estilos son buenos) */
 #agregar-datos h2, #agregar-datos h3 {
     text-align: center;
     margin-bottom: 1.5rem;
@@ -81,22 +167,4 @@ tbody tr:hover {
 #agregar-datos form button.boton-primario {
     width: 100%;
     margin-top: 1rem;
-}
-
-/* --- Estilos para el Botón de Editar en la Tabla --- */
-
-.boton-editar {
-    background-color: #ffc107; /* Un color amarillo para "editar" */
-    color: #212529;
-    border: none;
-    padding: 6px 12px;
-    border-radius: 6px;
-    cursor: pointer;
-    font-size: 0.85em;
-    font-weight: 600;
-    transition: background-color 0.2s ease;
-}
-
-.boton-editar:hover {
-    background-color: #e0a800;
 }

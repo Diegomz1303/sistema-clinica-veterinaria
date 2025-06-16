@@ -204,6 +204,7 @@ header {
 
 
 /* --- Cabecera y Sesión de Usuario (Común a index y detalle) --- */
+/* --- Cabecera y Sesión de Usuario (Común a index y detalle) --- */
 header {
     background: var(--color-superficie);
     color: var(--color-texto-principal);
@@ -218,7 +219,7 @@ header {
 
 .logo-container {
     display: flex;
-    align-items: center;
+    align-items: center; 
 }
 
 /* ... */
