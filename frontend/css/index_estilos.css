@@ -1,0 +1,102 @@
+/* --- Estilos para la Página Principal (index.html) --- */
+
+main {
+    max-width: 1200px;
+    margin: 2rem auto;
+    background: var(--color-superficie);
+    padding: 2.5rem;
+    border-radius: 12px;
+    box-shadow: var(--sombra-caja);
+}
+
+.controles-tabla {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 0;
+    margin-bottom: 1rem;
+}
+
+.controles-busqueda input {
+    padding: 10px 15px;
+    border: 1px solid var(--color-borde-oscuro);
+    border-radius: 8px;
+    width: 300px;
+    font-size: 0.9em;
+    transition: all 0.3s ease;
+}
+
+.controles-busqueda input:focus {
+    outline: none;
+    border-color: var(--color-primario);
+    box-shadow: 0 0 0 3px rgba(217, 35, 45, 0.2);
+}
+
+/* --- Estilos para la Tabla de Pacientes --- */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+}
+
+th, td {
+    padding: 15px;
+    border: none;
+    border-bottom: 1px solid var(--color-borde);
+    text-align: left;
+    vertical-align: middle;
+}
+
+thead th {
+    font-weight: 600;
+    font-size: 0.85em;
+    text-transform: uppercase;
+    color: var(--color-texto-secundario);
+    border-bottom-width: 2px;
+}
+
+tbody tr {
+    transition: background-color 0.2s ease;
+}
+
+tbody tr:hover {
+    background-color: #e9ecef;
+    cursor: pointer;
+}
+
+/* --- Estilos para el formulario en el modal de index.html --- */
+#agregar-datos h2, #agregar-datos h3 {
+    text-align: center;
+    margin-bottom: 1.5rem;
+    font-weight: 600;
+}
+#agregar-datos h3 {
+    font-size: 1.1em;
+    color: var(--color-primario);
+    margin-top: 2rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid var(--color-borde);
+}
+
+#agregar-datos form button.boton-primario {
+    width: 100%;
+    margin-top: 1rem;
+}
+
+/* --- Estilos para el Botón de Editar en la Tabla --- */
+
+.boton-editar {
+    background-color: #ffc107; /* Un color amarillo para "editar" */
+    color: #212529;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.85em;
+    font-weight: 600;
+    transition: background-color 0.2s ease;
+}
+
+.boton-editar:hover {
+    background-color: #e0a800;
+}

@@ -1,0 +1,235 @@
+/* --- Importamos una fuente más moderna desde Google Fonts --- */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
+
+/* --- Variables de Color (CSS Variables) para cambiar el tema fácilmente --- */
+:root {
+    --color-primario: #d9232d; /* Rojo principal del logo */
+    --color-primario-hover: #b81d26; /* Rojo más oscuro para hover */
+    --color-secundario: #6c757d; /* Gris oscuro para botones secundarios */
+    --color-secundario-hover: #5a6268;
+    --color-fondo: #f4f7f6;
+    --color-superficie: #ffffff;
+    --color-texto-principal: #2c3e50;
+    --color-texto-secundario: #7f8c8d;
+    --color-borde: #ecf0f1;
+    --color-borde-oscuro: #c8ced3;
+    --sombra-caja: 0 4px 15px rgba(0, 0, 0, 0.08);
+}
+
+/* --- Estilos Generales y Tipografía --- */
+body {
+    font-family: 'Poppins', sans-serif;
+    line-height: 1.6;
+    background-color: var(--color-fondo);
+    color: var(--color-texto-principal);
+    margin: 0;
+    padding: 0;
+}
+
+/* --- Cabecera y Sesión de Usuario (Común a index y detalle) --- */
+header {
+    background: var(--color-superficie);
+    color: var(--color-texto-principal);
+    padding: 1rem 2rem;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    border-bottom: 1px solid var(--color-borde);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logo-container {
+    display: flex;
+    align-items: center;
+}
+
+.logo-container img {
+    max-height: 45px;
+    margin-right: 15px;
+}
+
+.logo-container h1 {
+    margin: 0;
+    font-size: 1.5em;
+    font-weight: 600;
+}
+
+.user-session {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.user-session span {
+    display: none; /* Oculta "Bienvenido, admin" */
+}
+
+/* --- Estilos de Botones Comunes --- */
+.boton-primario {
+    background-color: var(--color-primario);
+    color: white;
+    padding: 10px 22px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 0.9em;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.boton-primario:hover {
+    background-color: var(--color-primario-hover);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+}
+
+.boton-secundario {
+    background-color: var(--color-secundario);
+    color: white;
+    padding: 8px 15px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 0.85em;
+    font-weight: 600;
+    text-decoration: none;
+    transition: all 0.3s ease;
+}
+
+.boton-secundario:hover {
+    background-color: var(--color-secundario-hover);
+}
+
+/* --- Estilos de Formularios Comunes --- */
+.form-group {
+    margin-bottom: 1rem;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+    font-size: 0.9em;
+}
+
+.form-group input,
+.form-group select,
+#form-nueva-visita textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid var(--color-borde-oscuro);
+    border-radius: 8px;
+    box-sizing: border-box;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    background-color: #fff;
+    font-family: 'Poppins', sans-serif;
+}
+
+.form-group input:focus, 
+.form-group select:focus,
+#form-nueva-visita textarea:focus {
+    outline: none;
+    border-color: var(--color-primario);
+    box-shadow: 0 0 0 3px rgba(217, 35, 45, 0.2);
+}
+
+/* --- Estilos de Modales Comunes --- */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 100;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0,0,0,0.6);
+    justify-content: center;
+    align-items: center;
+}
+
+.modal-contenido {
+    background-color: var(--color-superficie);
+    margin: auto;
+    padding: 30px 40px;
+    border-radius: 12px;
+    width: 90%;
+    max-width: 650px;
+    position: relative;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.3);
+    max-height: 90vh;
+    overflow-y: auto;
+}
+
+.cerrar-modal {
+    color: #aaa;
+    position: absolute;
+    top: 15px;
+    right: 25px;
+    font-size: 32px;
+    font-weight: bold;
+    transition: color 0.2s;
+}
+
+.cerrar-modal:hover,
+.cerrar-modal:focus {
+    color: var(--color-texto-principal);
+    text-decoration: none;
+    cursor: pointer;
+}
+
+/* --- Estilos de Mensajes de Alerta Comunes --- */
+.mensaje {
+    margin-top: 15px;
+    padding: 12px;
+    border-radius: 8px;
+    text-align: center;
+    font-weight: 500;
+    border: 1px solid transparent;
+}
+
+.mensaje.exito {
+    background-color: #d1e7dd;
+    color: #0f5132;
+    border-color: #badbcc;
+}
+
+.mensaje.error {
+    background-color: #f8d7da;
+    color: #842029;
+    border-color: #f5c2c7;
+}
+
+
+/* --- Cabecera y Sesión de Usuario (Común a index y detalle) --- */
+header {
+    background: var(--color-superficie);
+    color: var(--color-texto-principal);
+    padding: 1rem 2rem;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    border-bottom: 1px solid var(--color-borde);
+    /* Estas 3 líneas son cruciales para el posicionamiento */
+    display: flex;
+    justify-content: space-between; 
+    align-items: center;
+}
+
+.logo-container {
+    display: flex;
+    align-items: center;
+}
+
+/* ... */
+
+.user-session {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+/* Esta regla oculta el texto "Bienvenido, admin" */
+.user-session span {
+    display: none;
+}

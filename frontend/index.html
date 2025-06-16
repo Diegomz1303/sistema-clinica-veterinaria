@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Veterinaria Alvarez</title>
+    <link rel="stylesheet" href="css/estilos_comunes.css">
+    <link rel="stylesheet" href="css/index_estilos.css">
+    <script src="js/app.js" defer></script>
+</head>
+<body>
+
+    <header>
+        <div class="logo-container">
+            <img src="img/logo_veterinaria.jpg" alt="Logo Veterinaria Alvarez">
+            <h1>Veterinaria Alvarez - Historial Clínico</h1>
+        </div>
+        <div class="user-session">
+            <button id="btn-logout" class="boton-secundario">Cerrar Sesión</button>
+        </div>
+    </header>
+
+    <main>
+        <section id="lista-pacientes">
+            <h2>Lista de Pacientes</h2>
+            <div class="controles-tabla">
+                <div class="controles-busqueda">
+                    <input type="text" id="input-busqueda-unificada" placeholder="Buscar por ID o Nombre de Paciente...">
+                </div>
+                <button id="btn-agregar-paciente" class="boton-primario">Agregar Paciente</button>
+            </div>
+            <table id="tabla-pacientes">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Nombre</th>
+                        <th>Especie</th>
+                        <th>Raza</th>
+                        <th>Propietario</th>
+                        <th>Acciones</th> <!-- === NUEVA COLUMNA === -->
+                    </tr>
+                </thead>
+                <tbody id="cuerpo-tabla-pacientes">
+                    <!-- Filas de pacientes se insertarán aquí -->
+                </tbody>
+            </table>
+        </section>
+    </main>
+
+    <!-- Modal para agregar/editar paciente -->
+    <div id="modal-formulario" class="modal">
+        <div class="modal-contenido">
+            <span class="cerrar-modal">&times;</span>
+            <!-- El título del modal se cambiará con JS -->
+            <h2 id="modal-titulo">Agregar Nuevo Propietario y Paciente</h2>
+            <form id="formulario-agregar">
+                <!-- El contenido del formulario no cambia -->
+                <h3>Datos del Propietario</h3>
+                    <div class="form-group">
+                        <label for="nombre-propietario">Nombre:</label>
+                        <input type="text" id="nombre-propietario" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="apellido-propietario">Apellido:</label>
+                        <input type="text" id="apellido-propietario" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="telefono-propietario">Teléfono:</label>
+                        <input type="tel" id="telefono-propietario" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="email-propietario">Email:</label>
+                        <input type="email" id="email-propietario">
+                    </div>
+                     <div class="form-group">
+                        <label for="direccion-propietario">Dirección:</label>
+                        <input type="text" id="direccion-propietario">
+                    </div>
+
+                    <h3 style="margin-top: 20px;">Datos del Paciente</h3>
+                    <div class="form-group">
+                        <label for="nombre-paciente">Nombre:</label>
+                        <input type="text" id="nombre-paciente" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="especie-paciente">Especie:</label>
+                        <input type="text" id="especie-paciente" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="raza-paciente">Raza:</label>
+                        <input type="text" id="raza-paciente">
+                    </div>
+                    <div class="form-group">
+                        <label for="sexo-paciente">Sexo:</label>
+                        <select id="sexo-paciente" required>
+                            <option value="" disabled selected>Seleccionar...</option>
+                            <option value="Macho">Macho</option>
+                            <option value="Hembra">Hembra</option>
+                        </select>
+                    </div>
+                     <div class="form-group">
+                        <label for="fecha-nacimiento-paciente">Fecha de Nacimiento:</label>
+                        <input type="date" id="fecha-nacimiento-paciente">
+                    </div>
+                    <div class="form-group">
+                        <label for="color-paciente">Color:</label>
+                        <input type="text" id="color-paciente">
+                    </div>
+                
+                <!-- El texto del botón se cambiará con JS -->
+                <button type="submit" id="btn-guardar-formulario" class="boton-primario">Guardar Paciente</button>
+                <div id="mensaje-formulario" class="mensaje"></div>
+            </form>
+        </div>
+    </div>
+
+</body>
+</html>
