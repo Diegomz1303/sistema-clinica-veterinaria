@@ -10,56 +10,64 @@
 </head>
 <body>
 
-<header>
-    <div class="logo-container">
-        <img src="img/logo_veterinaria.jpg" alt="Logo Veterinaria Alvarez">
-        <h1>Veterinaria Alvarez - Historial Clínico</h1>
-    </div>
-    <nav>
-        <a href="index.html" class="active">Pacientes</a>
-        <a href="almacen.html">Almacén</a>
-    </nav>
-    <div class="user-session">
-        <span style="display: none;">Bienvenido, <strong id="username-display"></strong></span>
-        <button id="btn-logout" class="boton-secundario">Cerrar Sesión</button>
-    </div>
-</header>
+    <aside id="sidebar-menu">
+        <div class="sidebar-header">
+            <img src="img/logo_veterinaria.jpg" alt="Logo Veterinaria Alvarez">
+            <h2>Veterinaria Alvarez</h2>
+        </div>
+        <nav class="sidebar-nav">
+            <a href="index.html" class="active">Pacientes</a>
+            <a href="almacen.html">Almacén</a>
+        </nav>
+        <div class="sidebar-footer">
+            <span id="username-sidebar">admin</span>
+            <button id="btn-logout" class="boton-secundario">Cerrar Sesión</button>
+        </div>
+    </aside>
 
-    <main>
-        <section id="lista-pacientes">
-            <!-- El h2 lo movemos a los controles para un mejor diseño -->
-            <div class="controles-tabla">
-                <h2>Lista de Pacientes</h2>
-                <div class="acciones-derecha">
-                    <div class="search-wrapper">
-                         <!-- He restaurado el ícono de búsqueda para que coincida con el CSS -->
-                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="search-icon"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
-                        <input type="text" id="input-busqueda-unificada" placeholder="Buscar paciente...">
+    <div id="main-container">
+        <header>
+            <button id="menu-toggle">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+            </button>
+            <div class="logo-container">
+                <h1>Historial Clínico</h1>
+            </div>
+            <div class="user-session-placeholder"></div>
+        </header>
+
+        <main>
+            <section id="lista-pacientes">
+                <div class="controles-tabla">
+                    <h2>Lista de Pacientes</h2>
+                    <div class="acciones-derecha">
+                        <div class="search-wrapper">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="search-icon"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                            <input type="text" id="input-busqueda-unificada" placeholder="Buscar paciente...">
+                        </div>
+                        <button id="btn-agregar-paciente" class="boton-primario">Agregar Paciente</button>
                     </div>
-                    <button id="btn-agregar-paciente" class="boton-primario">Agregar Paciente</button>
                 </div>
-            </div>
-            <div class="tabla-container">
-                <table id="tabla-pacientes">
-                    <thead>
-                        <tr>
-                            <th>ID</th>
-                            <th>Nombre</th>
-                            <th>Especie</th>
-                            <th>Raza</th>
-                            <th>Propietario</th>
-                            <th>Acciones</th>
-                        </tr>
-                    </thead>
-                    <tbody id="cuerpo-tabla-pacientes">
-                        <!-- Filas de pacientes -->
-                    </tbody>
-                </table>
-            </div>
-        </section>
-    </main>
+                <div class="tabla-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Nombre</th>
+                                <th>Especie</th>
+                                <th>Raza</th>
+                                <th>Propietario</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody id="cuerpo-tabla-pacientes">
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        </main>
+    </div>
 
-    <!-- Modal para agregar/editar paciente -->
     <div id="modal-formulario" class="modal">
         <div class="modal-contenido">
             <span class="cerrar-modal">&times;</span>

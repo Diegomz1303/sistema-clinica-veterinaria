@@ -7,59 +7,70 @@
     <link rel="stylesheet" href="css/estilos_comunes.css">
     <link rel="stylesheet" href="css/index_estilos.css">
     <link rel="stylesheet" href="css/almacen_estilos.css">
+    <script src="js/almacen.js" defer></script>
 </head>
 <body>
-    <header>
-        <div class="logo-container">
+
+    <aside id="sidebar-menu">
+        <div class="sidebar-header">
             <img src="img/logo_veterinaria.jpg" alt="Logo Veterinaria Alvarez">
-            <h1>Veterinaria Alvarez</h1>
+            <h2>Veterinaria Alvarez</h2>
         </div>
-        
-        <nav>
+        <nav class="sidebar-nav">
             <a href="index.html">Pacientes</a>
             <a href="almacen.html" class="active">Almacén</a>
         </nav>
-
-        <div class="user-session">
-            <span id="username-placeholder">admin</span>
+        <div class="sidebar-footer">
+            <span id="username-sidebar">admin</span>
             <button id="btn-logout" class="boton-secundario">Cerrar Sesión</button>
         </div>
-    </header>
+    </aside>
 
-    <main>
-        <div class="controles-tabla">
-            <h2>Gestión de Almacén</h2>
-            <div class="acciones-derecha">
-                <div class="search-wrapper">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="search-icon"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
-                    <input type="text" id="inputBusqueda" placeholder="Buscar por nombre o lote...">
-                </div>
-                <button id="btnNuevoProducto" class="boton-primario">Añadir Nuevo Producto</button>
+    <div id="main-container">
+        <header>
+            <button id="menu-toggle">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+            </button>
+            <div class="logo-container">
+                <h1>Gestión de Almacén</h1>
             </div>
-        </div>
+            <div class="user-session-placeholder"></div>
+        </header>
 
-        <div class="tabla-container">
-            <table>
-                <thead>
-                    <tr>
-                        <th>Nombre</th>
-                        <th>Tipo</th>
-                        <th>Stock</th>
-                        <th>Precio Venta</th>
-                        <th>Lote</th>
-                        <th>Caducidad</th>
-                        <th>Acciones</th>
-                    </tr>
-                </thead>
-                <tbody id="productos-tbody">
-                    </tbody>
-            </table>
-        </div>
-        <div id="pagination-controls" class="pagination-controls"></div>
-    </main>
+        <main>
+            <div class="controles-tabla">
+                <h2>Inventario de Productos</h2>
+                <div class="acciones-derecha">
+                    <div class="search-wrapper">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="search-icon"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                        <input type="text" id="inputBusqueda" placeholder="Buscar por nombre o lote...">
+                    </div>
+                    <button id="btnNuevoProducto" class="boton-primario">Añadir Producto</button>
+                </div>
+            </div>
+
+            <div class="tabla-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Nombre</th>
+                            <th>Tipo</th>
+                            <th>Stock</th>
+                            <th>Precio Venta</th>
+                            <th>Lote</th>
+                            <th>Caducidad</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody id="productos-tbody"></tbody>
+                </table>
+            </div>
+            <div id="pagination-controls" class="pagination-controls"></div>
+        </main>
+    </div>
 
     <div id="producto-modal" class="modal">
-        <div class="modal-content">
+        <div class="modal-contenido">
             <span class="close">&times;</span>
             <h3 id="modal-title">Añadir Nuevo Producto</h3>
             <form id="producto-form">
@@ -80,7 +91,7 @@
                         </select>
                     </div>
                 </div>
-                 <div class="form-row">
+                <div class="form-row">
                     <div class="form-group">
                         <label for="stock_actual">Stock Actual:</label>
                         <input type="number" id="stock_actual" name="stock_actual" required>
@@ -90,7 +101,7 @@
                         <input type="number" step="0.01" id="precio_venta" name="precio_venta">
                     </div>
                 </div>
-                 <div class="form-row">
+                <div class="form-row">
                     <div class="form-group">
                         <label for="lote">Lote:</label>
                         <input type="text" id="lote" name="lote">
@@ -109,6 +120,5 @@
         </div>
     </div>
 
-    <script src="js/almacen.js"></script>
 </body>
 </html>

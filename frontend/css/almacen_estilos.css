@@ -77,3 +77,34 @@
     width: 100%;
     align-self: center; /* Centrar el botón */
 }
+
+/* --- Estilos para los botones de acción en la tabla de productos --- */
+#productos-tbody .btn-editar,
+#productos-tbody .btn-eliminar {
+    border: none;
+    padding: 6px 14px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.85em;
+    font-weight: 600;
+    color: white;
+    transition: all 0.2s ease;
+}
+
+/* Botón de Editar (Gris) */
+#productos-tbody .btn-editar {
+    background-color: var(--color-secundario); 
+}
+#productos-tbody .btn-editar:hover {
+    background-color: var(--color-secundario-hover);
+    transform: translateY(-1px);
+}
+
+/* Botón de Eliminar (Rojo) */
+#productos-tbody .btn-eliminar {
+    background-color: #d9232d; /* Usamos el rojo principal de la marca */
+}
+#productos-tbody .btn-eliminar:hover {
+    background-color: #b81d26; /* Rojo más oscuro */
+    transform: translateY(-1px);
+}
