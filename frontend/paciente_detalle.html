@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Detalle del Paciente - Veterinaria Alvarez</title>
-    <!-- Tus enlaces a CSS aquí -->
     <link rel="stylesheet" href="css/estilos_comunes.css">
     <link rel="stylesheet" href="css/detalle_estilos.css">
     <script src="js/paciente_detalle.js" defer></script>
@@ -17,7 +16,7 @@
             <h1>Veterinaria Alvarez - Historial Clínico</h1>
         </div>
         <div class="user-session">
-            <button id="btn-logout" class="boton-secundario">Cerrar Sesión</button>
+            <span id="username-placeholder"></span> <button id="btn-logout" class="boton-secundario">Cerrar Sesión</button>
         </div>
     </header>
 
@@ -28,7 +27,6 @@
         
         <div class="detalle-container">
 
-            <!-- Columna Izquierda: Información de Consulta -->
             <div class="info-columna">
                 <div class="info-card">
                     <h3>Datos del Paciente</h3>
@@ -54,14 +52,13 @@
                 </div>
             </div>
 
-            <!-- Columna Derecha: Formulario de Acciones -->
             <div class="historial-columna">
                 <h3>Agregar Visita al Historial</h3>
                 <div class="info-card">
                     <form id="form-nueva-visita">
-                        <div class="form-group">
+                        <input type="hidden" name="id_paciente" id="id_paciente_visita"> <div class="form-group">
                             <label for="tipo-visita">Tipo de Visita:</label>
-                            <select id="tipo-visita" required>
+                            <select id="tipo-visita" name="tipo_visita" required>
                                 <option value="Consulta General" selected>Consulta General</option>
                                 <option value="Urgencia">Urgencia</option>
                                 <option value="Vacunación">Vacunación</option>
@@ -71,39 +68,49 @@
                         </div>
                         <div class="form-group">
                             <label for="motivo-consulta">Motivo de la Consulta (Síntomas):</label>
-                            <input type="text" id="motivo-consulta" required>
+                            <input type="text" id="motivo-consulta" name="motivo_consulta" required>
                         </div>
                         
-                        <!-- === CAMPO MOVIDO AQUÍ === -->
                         <div class="form-group">
                             <label for="examenes-complementarios">Exámenes Complementarios (Solicitados/Resultados):</label>
-                            <textarea id="examenes-complementarios" rows="3"></textarea>
+                            <textarea id="examenes-complementarios" name="examenes_complementarios" rows="3"></textarea>
                         </div>
 
                         <div class="form-group">
                             <label for="diagnostico">Diagnóstico:</label>
-                            <textarea id="diagnostico" rows="3" required></textarea>
+                            <textarea id="diagnostico" name="diagnostico" rows="3" required></textarea>
                         </div>
+                        
                         <div class="form-group">
-                            <label for="tratamiento">Tratamiento:</label>
-                            <textarea id="tratamiento" rows="3"></textarea>
+                            <label for="tratamiento">Notas del Tratamiento:</label>
+                            <textarea id="tratamiento" name="tratamiento" rows="2" placeholder="Notas adicionales sobre el procedimiento..."></textarea>
                         </div>
-
+                
+                        <div class="form-group" id="productos-utilizados-section">
+                            <label>Productos Utilizados en la Visita:</label>
+                            <div class="search-producto-wrapper">
+                                <input type="text" id="search-producto-input" placeholder="Buscar producto por nombre...">
+                                <div id="search-producto-results"></div>
+                            </div>
+                            <div id="productos-seleccionados-list">
+                                </div>
+                            <input type="hidden" name="productos_usados" id="productos_usados_hidden_input">
+                        </div>
                         <label>Signos Vitales</label>
                         <div class="form-row">
                             <div class="form-group">
-                                <input type="number" step="0.1" id="temperatura" placeholder="Temp. (°C)">
+                                <input type="number" step="0.1" id="temperatura" name="temperatura" placeholder="Temp. (°C)">
                             </div>
                             <div class="form-group">
-                                <input type="number" id="frecuencia-cardiaca" placeholder="Frec. Cardíaca">
+                                <input type="number" id="frecuencia-cardiaca" name="frecuencia_cardiaca" placeholder="Frec. Cardíaca">
                             </div>
                             <div class="form-group">
-                                <input type="number" id="frecuencia-respiratoria" placeholder="Frec. Resp.">
+                                <input type="number" id="frecuencia-respiratoria" name="frecuencia_respiratoria" placeholder="Frec. Resp.">
                             </div>
                         </div>
                         <div class="form-group">
                             <label for="peso">Peso (Kg):</label>
-                            <input type="number" step="0.01" id="peso" placeholder="ej. 5.25">
+                            <input type="number" step="0.01" id="peso" name="peso" placeholder="ej. 5.25">
                         </div>
                         <div class="form-group">
                             <label for="archivos">Archivos Adjuntos (Radiografías, Labs, etc.):</label>
@@ -111,12 +118,12 @@
                         </div>
                         <div class="form-group">
                             <label for="proxima-cita">Próxima Cita:</label>
-                            <input type="date" id="proxima-cita">
+                            <input type="date" id="proxima-cita" name="proxima_cita">
                         </div>
                         
                         <div class="form-group">
                             <label for="doctor-encargado">Doctor Encargado:</label>
-                            <select id="doctor-encargado" required>
+                            <select id="doctor-encargado" name="doctor_encargado" required>
                                 <option value="" disabled selected>Seleccionar doctor...</option>
                                 <option value="Dr. Willian Armando Alvarez Ramos">Dr. Willian Armando Alvarez Ramos</option>
                                 <option value="Dra. Tamara Abigail Alvarez Flores">Dra. Tamara Abigail Alvarez Flores</option>
@@ -131,7 +138,6 @@
         </div>
     </main>
 
-    <!-- Modal para mostrar detalles de una visita -->
     <div id="modal-visita-detalle" class="modal">
         <div class="modal-contenido">
             <span class="cerrar-modal">&times;</span>

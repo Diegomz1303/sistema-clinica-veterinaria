@@ -1,169 +1,260 @@
-// js/paciente_detalle.js
+document.addEventListener('DOMContentLoaded', async () => {
 
-document.addEventListener('DOMContentLoaded', function() {
-
-    // --- Lógica de Seguridad y Sesión ---
-    const btnLogout = document.getElementById('btn-logout');
-    fetch('../backend/api_check_session.php')
-        .then(response => response.json())
-        .then(data => {
-            if (!data.loggedIn) {
-                window.location.href = 'login.html';
-            }
-        });
-    if (btnLogout) {
-        btnLogout.addEventListener('click', () => {
-            fetch('../backend/api_logout.php')
-                .then(() => window.location.href = 'login.html');
-        });
-    }
-
-    // --- Lógica de la Página ---
+    // --- 1. INICIALIZACIÓN Y CARGA DE DATOS ---
     const urlParams = new URLSearchParams(window.location.search);
     const pacienteId = urlParams.get('id');
-    let historialData = [];
 
-    const formNuevaVisita = document.getElementById('form-nueva-visita');
-    const historialContainer = document.getElementById('historial-lista-container');
-    const modalVisita = document.getElementById('modal-visita-detalle');
-    const cerrarModalVisita = modalVisita.querySelector('.cerrar-modal');
-
-    if (pacienteId) {
-        cargarDetallesPaciente(pacienteId);
-    } else {
-        document.querySelector('main').innerHTML = '<h1>Error: No se proporcionó un ID de paciente.</h1>';
+    if (!pacienteId) {
+        alert('No se especificó un paciente.');
+        window.location.href = 'index.html';
+        return;
     }
 
-    function cargarDetallesPaciente(id) {
-        fetch(`http://localhost/veterinaria-app/backend/api_get_paciente_detalle.php?id=${id}`)
-            .then(response => response.json())
-            .then(data => {
-                if (data.error) throw new Error(data.error);
-                historialData = data.historial || [];
-                const actualizarCampo = (elId, valor, fallback = 'No disponible') => {
-                    const el = document.getElementById(elId);
-                    if (el) el.textContent = valor || fallback;
-                };
-                actualizarCampo('detalle-nombre-paciente', data.nombre);
-                actualizarCampo('detalle-especie', data.especie);
-                actualizarCampo('detalle-raza', data.raza);
-                actualizarCampo('detalle-sexo', data.sexo);
-                actualizarCampo('detalle-color', data.color);
-                actualizarCampo('detalle-fecha-nacimiento', data.fecha_nacimiento);
-                actualizarCampo('detalle-nombre-propietario', `${data.propietario.nombre} ${data.propietario.apellido}`);
-                actualizarCampo('detalle-telefono', data.propietario.telefono);
-                actualizarCampo('detalle-email', data.propietario.email);
-                actualizarCampo('detalle-direccion', data.propietario.direccion);
-                historialContainer.innerHTML = '';
-                if (historialData.length > 0) {
-                    historialData.forEach((visita, index) => {
-                        const itemVisita = document.createElement('div');
-                        itemVisita.className = 'visita-resumen';
-                        itemVisita.dataset.visitaIndex = index;
-                        const fecha = new Date(visita.fecha_visita).toLocaleDateString('es-ES');
-                        itemVisita.innerHTML = `<h5>${visita.tipo_visita || 'Visita'} - ${visita.motivo_consulta}</h5><span class="fecha">${fecha}</span>`;
-                        historialContainer.appendChild(itemVisita);
-                    });
-                } else {
-                    historialContainer.innerHTML = '<p>Este paciente no tiene visitas registradas.</p>';
-                }
-            });
-    }
+    // Cargar toda la información de la página
+    await cargarDetallesPaciente(pacienteId);
 
-    // --- Lógica del Modal de Detalles de Visita (CORREGIDO) ---
-    historialContainer.addEventListener('click', function(event) {
-        const resumen = event.target.closest('.visita-resumen');
-        if (!resumen) return;
-        const visitaIndex = resumen.dataset.visitaIndex;
-        const visita = historialData[visitaIndex];
-
-        if (visita) {
-            // Rellenar todos los campos del modal
-            document.getElementById('visita-fecha').textContent = new Date(visita.fecha_visita).toLocaleString('es-ES');
-            document.getElementById('visita-tipo').textContent = visita.tipo_visita || 'No especificado';
-            document.getElementById('visita-motivo').textContent = visita.motivo_consulta;
-            document.getElementById('visita-peso').textContent = visita.peso_kg ? `${visita.peso_kg} Kg` : 'No registrado';
-            document.getElementById('visita-temperatura').textContent = visita.temperatura ? `${visita.temperatura} °C` : 'No registrado';
-            document.getElementById('visita-frec-cardiaca').textContent = visita.frecuencia_cardiaca ? `${visita.frecuencia_cardiaca} ppm` : 'No registrado';
-            document.getElementById('visita-frec-resp').textContent = visita.frecuencia_respiratoria ? `${visita.frecuencia_respiratoria} rpm` : 'No registrado';
-            document.getElementById('visita-diagnostico').textContent = visita.diagnostico;
-            document.getElementById('visita-tratamiento').textContent = visita.tratamiento || 'No especificado';
-            document.getElementById('visita-examenes').textContent = visita.examenes_complementarios || 'Ninguno';
-            
-            // === LÍNEA CORREGIDA ===
-            document.getElementById('visita-proxima-cita').textContent = (visita.proxima_cita && visita.proxima_cita !== '0000-00-00') ? new Date(visita.proxima_cita + 'T00:00:00').toLocaleDateString('es-ES') : 'No agendada';
-            document.getElementById('visita-doctor').textContent = visita.doctor_encargado || 'No especificado';
-            
-            // Lógica para renderizar archivos adjuntos
-            const listaArchivosDiv = document.getElementById('visita-archivos-lista');
-            listaArchivosDiv.innerHTML = ''; 
-            if (visita.archivos && visita.archivos.length > 0) {
-                visita.archivos.forEach(archivo => {
-                    const enlace = document.createElement('a');
-                    enlace.href = `../backend/${archivo.ruta_archivo}`; 
-                    enlace.textContent = archivo.nombre_original; 
-                    enlace.target = '_blank'; 
-                    listaArchivosDiv.appendChild(enlace);
-                });
-            } else {
-                listaArchivosDiv.innerHTML = '<p>No hay archivos adjuntos para esta visita.</p>';
+    // --- 2. LÓGICA DE CARGA DE DATOS Y RENDERIZADO ---
+    async function cargarDetallesPaciente(id) {
+        try {
+            const response = await fetch(`../backend/api_get_paciente_detalle.php?id=${id}`);
+            if (!response.ok) {
+                 if (response.status === 401) window.location.href = 'login.html';
+                 throw new Error('Error en la respuesta de la API');
             }
-            modalVisita.style.display = 'flex';
+            const data = await response.json();
+            if (data.success) {
+                renderDatosPaciente(data.paciente);
+                renderHistorial(data.historial);
+                document.getElementById('id_paciente_visita').value = id; // Poner ID en el form
+            } else {
+                alert(data.message);
+            }
+        } catch (error) {
+            console.error('Error al cargar los detalles:', error);
         }
+    }
+
+    function renderDatosPaciente(paciente) {
+        document.getElementById('detalle-nombre-paciente').textContent = paciente.nombre;
+        document.getElementById('detalle-especie').textContent = paciente.especie;
+        document.getElementById('detalle-raza').textContent = paciente.raza;
+        document.getElementById('detalle-sexo').textContent = paciente.sexo;
+        document.getElementById('detalle-color').textContent = paciente.color;
+        document.getElementById('detalle-fecha-nacimiento').textContent = new Date(paciente.fecha_nacimiento).toLocaleDateString('es-PE', { timeZone: 'UTC' });
+        
+        document.getElementById('detalle-nombre-propietario').textContent = `${paciente.nombre_propietario} ${paciente.apellido}`;
+        document.getElementById('detalle-telefono').textContent = paciente.telefono;
+        document.getElementById('detalle-email').textContent = paciente.email;
+        document.getElementById('detalle-direccion').textContent = paciente.direccion;
+    }
+
+// ENCUENTRA Y REEMPLAZA ESTA FUNCIÓN:
+function renderHistorial(historial) {
+    const container = document.getElementById('historial-lista-container');
+    container.innerHTML = '';
+    if (historial.length === 0) {
+        container.innerHTML = '<p>No hay visitas registradas.</p>';
+        return;
+    }
+
+    historial.forEach(visita => {
+        const visitaCard = document.createElement('div');
+        visitaCard.className = 'visita-card';
+        visitaCard.style.cursor = 'pointer'; // Añadimos cursor para indicar que es clickeable
+        
+        // Guardamos los datos completos de la visita en el elemento para usarlos después
+        visitaCard.dataset.visitaData = JSON.stringify(visita); 
+        
+        visitaCard.innerHTML = `
+            <div class="visita-header">
+                <strong>${new Date(visita.fecha_visita).toLocaleDateString('es-PE')} - ${visita.tipo_visita}</strong>
+                <span>${visita.motivo_consulta}</span>
+            </div>
+        `;
+        container.appendChild(visitaCard);
     });
+}
+
+
+// AÑADE ESTE NUEVO BLOQUE DE CÓDIGO AL FINAL DE TU ARCHIVO paciente_detalle.js
+// --- 4. LÓGICA PARA MOSTRAR DETALLES DE VISITAS ANTERIORES ---
+const historialContainer = document.getElementById('historial-lista-container');
+const visitaModal = document.getElementById('modal-visita-detalle');
+const cerrarModalBtn = visitaModal.querySelector('.cerrar-modal');
+
+historialContainer.addEventListener('click', (e) => {
+    const visitaCard = e.target.closest('.visita-card');
+    if (!visitaCard) return;
+
+    // Recuperamos los datos de la visita que guardamos antes
+    const visitaData = JSON.parse(visitaCard.dataset.visitaData);
     
-    // Cerrar modal
-    cerrarModalVisita.addEventListener('click', () => modalVisita.style.display = 'none');
-    window.addEventListener('click', (event) => {
-        if (event.target == modalVisita) modalVisita.style.display = 'none';
+    // Llenamos el modal con los datos
+    document.getElementById('visita-fecha').textContent = new Date(visitaData.fecha_visita).toLocaleString('es-PE');
+    document.getElementById('visita-tipo').textContent = visitaData.tipo_visita;
+    document.getElementById('visita-motivo').textContent = visitaData.motivo_consulta;
+    document.getElementById('visita-examenes').textContent = visitaData.examenes_complementarios || 'No se registraron.';
+    document.getElementById('visita-diagnostico').textContent = visitaData.diagnostico;
+    document.getElementById('visita-tratamiento').textContent = visitaData.tratamiento || 'No se registraron notas.';
+    document.getElementById('visita-peso').textContent = visitaData.peso_kg ? `${visitaData.peso_kg} Kg` : 'N/A';
+    document.getElementById('visita-temperatura').textContent = visitaData.temperatura ? `${visitaData.temperatura} °C` : 'N/A';
+    document.getElementById('visita-frec-cardiaca').textContent = visitaData.frecuencia_cardiaca || 'N/A';
+    document.getElementById('visita-frec-resp').textContent = visitaData.frecuencia_respiratoria || 'N/A';
+    document.getElementById('visita-proxima-cita').textContent = visitaData.proxima_cita ? new Date(visitaData.proxima_cita).toLocaleDateString('es-PE', { timeZone: 'UTC' }) : 'No definida';
+    document.getElementById('visita-doctor').textContent = visitaData.doctor_encargado;
+
+    // Llenar la lista de productos utilizados
+    const productosLista = document.getElementById('visita-archivos-lista'); // Usamos el div de archivos, o puedes crear uno nuevo.
+    productosLista.innerHTML = '';
+    if (visitaData.productos_utilizados) {
+        const productos = visitaData.productos_utilizados.split(';');
+        productos.forEach(p => {
+            const [id, nombre, cantidad] = p.split(':');
+            const pElem = document.createElement('p');
+            pElem.textContent = `- ${nombre} (Cantidad: ${cantidad})`;
+            productosLista.appendChild(pElem);
+        });
+    } else {
+        productosLista.innerHTML = '<p>No se usaron productos del inventario.</p>';
+    }
+
+    // Mostramos el modal
+    visitaModal.style.display = 'block';
+});
+
+cerrarModalBtn.onclick = () => {
+    visitaModal.style.display = 'none';
+};
+
+window.addEventListener('click', (event) => {
+    if (event.target == visitaModal) {
+        visitaModal.style.display = 'none';
+    }
+});
+
+    // --- 3. LÓGICA PARA AGREGAR VISITA Y PRODUCTOS ---
+    const searchInput = document.getElementById('search-producto-input');
+    const searchResults = document.getElementById('search-producto-results');
+    const selectedList = document.getElementById('productos-seleccionados-list');
+    const hiddenInput = document.getElementById('productos_usados_hidden_input');
+    let productosSeleccionados = [];
+
+    searchInput.addEventListener('input', async () => {
+        const searchTerm = searchInput.value;
+        if (searchTerm.length < 2) {
+            searchResults.style.display = 'none';
+            return;
+        }
+        const response = await fetch(`../backend/api_get_productos.php?search=${searchTerm}`);
+        const result = await response.json();
+        
+        searchResults.innerHTML = '';
+        if (result.data.length > 0) {
+            searchResults.style.display = 'block';
+            result.data.forEach(producto => {
+                const item = document.createElement('div');
+                item.className = 'search-result-item';
+                item.textContent = `${producto.nombre} (Stock: ${producto.stock_actual})`;
+                item.onclick = () => seleccionarProducto(producto);
+                searchResults.appendChild(item);
+            });
+        } else {
+            searchResults.style.display = 'none';
+        }
     });
 
-    // --- Lógica del Formulario para Agregar Nueva Visita ---
-    formNuevaVisita.addEventListener('submit', function(event) {
-        event.preventDefault();
-        
-        const formData = new FormData();
-        formData.append('paciente_id', pacienteId);
-        formData.append('tipo_visita', document.getElementById('tipo-visita').value);
-        formData.append('motivo_consulta', document.getElementById('motivo-consulta').value);
-        formData.append('diagnostico', document.getElementById('diagnostico').value);
-        formData.append('tratamiento', document.getElementById('tratamiento').value);
-        formData.append('examenes_complementarios', document.getElementById('examenes-complementarios').value); // Nuevo campo
-        formData.append('peso', document.getElementById('peso').value);
-        formData.append('temperatura', document.getElementById('temperatura').value);
-        formData.append('frecuencia_cardiaca', document.getElementById('frecuencia-cardiaca').value);
-        formData.append('frecuencia_respiratoria', document.getElementById('frecuencia-respiratoria').value);
-        formData.append('proxima_cita', document.getElementById('proxima-cita').value);
-        formData.append('doctor_encargado', document.getElementById('doctor-encargado').value); // Nuevo campo
+    function seleccionarProducto(producto) {
+        searchInput.value = '';
+        searchResults.style.display = 'none';
+        if (productosSeleccionados.find(p => p.id === producto.id)) return;
 
-        const inputArchivos = document.getElementById('archivos');
-        for (let i = 0; i < inputArchivos.files.length; i++) {
-            formData.append('archivos[]', inputArchivos.files[i]);
-        }
-        
-        const mensajeDiv = document.getElementById('mensaje-visita');
-        mensajeDiv.style.display = 'none';
-
-        fetch('http://localhost/veterinaria-app/backend/api_agregar_visita.php', {
-            method: 'POST',
-            body: formData
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.error) {
-                mensajeDiv.textContent = 'Error: ' + data.error;
-                mensajeDiv.className = 'mensaje error';
-                mensajeDiv.style.display = 'block';
-            } else {
-                mensajeDiv.textContent = data.mensaje;
-                mensajeDiv.className = 'mensaje exito';
-                mensajeDiv.style.display = 'block';
-                formNuevaVisita.reset();
-                cargarDetallesPaciente(pacienteId);
-                setTimeout(() => {
-                    mensajeDiv.style.display = 'none';
-                }, 4000);
-            }
+        productosSeleccionados.push({
+            id: producto.id,
+            nombre: producto.nombre,
+            cantidad: 1,
+            precio: producto.precio_venta,
+            stock_max: producto.stock_actual
         });
+        renderProductosSeleccionados();
+    }
+
+    function renderProductosSeleccionados() {
+        selectedList.innerHTML = '';
+        productosSeleccionados.forEach((producto, index) => {
+            const item = document.createElement('div');
+            item.className = 'producto-seleccionado-item';
+            item.innerHTML = `
+                <span>${producto.nombre}</span>
+                <div>
+                    <label>Cant:</label>
+                    <input type="number" value="${producto.cantidad}" min="1" max="${producto.stock_max}" class="cantidad-producto-input" data-index="${index}">
+                    <button type="button" class="btn-remover-producto" data-index="${index}">&times;</button>
+                </div>
+            `;
+            selectedList.appendChild(item);
+        });
+        actualizarHiddenInput();
+    }
+
+    selectedList.addEventListener('input', e => {
+        if (e.target.classList.contains('cantidad-producto-input')) {
+            const index = e.target.dataset.index;
+            productosSeleccionados[index].cantidad = parseInt(e.target.value);
+            actualizarHiddenInput();
+        }
+    });
+
+    selectedList.addEventListener('click', e => {
+        if (e.target.classList.contains('btn-remover-producto')) {
+            productosSeleccionados.splice(e.target.dataset.index, 1);
+            renderProductosSeleccionados();
+        }
+    });
+
+    function actualizarHiddenInput() {
+        hiddenInput.value = JSON.stringify(productosSeleccionados.map(p => ({
+            id: p.id,
+            cantidad: p.cantidad,
+            precio: p.precio
+        })));
+    }
+
+    // Envío del formulario de nueva visita
+    const formNuevaVisita = document.getElementById('form-nueva-visita');
+    formNuevaVisita.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const formData = new FormData(formNuevaVisita);
+        
+        try {
+            const response = await fetch('../backend/api_agregar_visita.php', {
+                method: 'POST',
+                body: formData
+            });
+            const result = await response.json();
+            const mensajeDiv = document.getElementById('mensaje-visita');
+            
+            if (result.success) {
+                mensajeDiv.textContent = 'Visita guardada con éxito.';
+                mensajeDiv.className = 'mensaje exito';
+                formNuevaVisita.reset();
+                productosSeleccionados = [];
+                renderProductosSeleccionados();
+                cargarDetallesPaciente(pacienteId); // Recargar el historial
+            } else {
+                mensajeDiv.textContent = 'Error: ' + result.message;
+                mensajeDiv.className = 'mensaje error';
+            }
+            mensajeDiv.style.display = 'block';
+            setTimeout(() => mensajeDiv.style.display = 'none', 5000);
+
+        } catch (error) {
+            console.error('Error al enviar el formulario:', error);
+        }
+    });
+
+    // --- OTROS EVENTOS ---
+    document.getElementById('btn-logout').addEventListener('click', async () => {
+        await fetch('../backend/api_logout.php');
+        window.location.href = 'login.html';
     });
 });

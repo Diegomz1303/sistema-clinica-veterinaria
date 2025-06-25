@@ -1,0 +1,79 @@
+/*
+    Estilos específicos para la página de Almacén (almacen.html)
+*/
+
+/* --- Estilos para la tabla de productos --- */
+#productos-tbody tr:hover {
+    background-color: var(--color-fondo-hover);
+}
+
+/* Indicadores de stock bajo o productos vencidos */
+#productos-tbody td.stock-bajo {
+    background-color: #fff3cd; /* Amarillo pálido */
+    color: #856404;
+    font-weight: bold;
+}
+
+#productos-tbody td.vencido {
+    background-color: #f8d7da; /* Rojo pálido */
+    color: #721c24;
+    text-decoration: line-through;
+}
+
+/* --- Estilos para el Formulario en el Modal --- */
+
+/* Reutilizamos gran parte de los estilos de los modales anteriores,
+  pero añadimos especificidad para el layout de este formulario.
+*/
+
+#producto-form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px; /* Espacio entre los elementos del formulario */
+}
+
+/* Contenedor para poner dos campos en la misma línea */
+.form-row {
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+}
+
+/* Cada grupo de label + input */
+.form-group {
+    flex: 1; /* Ocupa el espacio disponible de manera equitativa */
+    display: flex;
+    flex-direction: column;
+}
+
+.form-group label {
+    margin-bottom: 5px;
+    font-size: 14px;
+    color: #555;
+}
+
+/* Estilos para los campos del formulario */
+#producto-form input[type="text"],
+#producto-form input[type="number"],
+#producto-form input[type="date"],
+#producto-form select,
+#producto-form textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: var(--border-radius);
+    font-size: 16px;
+    box-sizing: border-box; /* Asegura que el padding no afecte el ancho total */
+}
+
+#producto-form textarea {
+    resize: vertical; /* Permite al usuario redimensionar el textarea verticalmente */
+    min-height: 80px;
+}
+
+#producto-form button[type="submit"] {
+    margin-top: 10px;
+    padding: 12px;
+    width: 100%;
+    align-self: center; /* Centrar el botón */
+}

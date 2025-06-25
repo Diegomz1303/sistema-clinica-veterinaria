@@ -1,95 +1,58 @@
 <?php
-// backend/api_get_paciente_detalle.php
-
+header('Content-Type: application/json');
 require 'db_connection.php';
+session_start();
 
-$id_paciente = isset($_GET['id']) ? intval($_GET['id']) : 0;
-
-if ($id_paciente <= 0) {
-    http_response_code(400);
-    echo json_encode(['error' => 'ID de paciente no válido.']);
+if (!isset($_SESSION['user_id'])) {
+    http_response_code(401);
+    echo json_encode(['success' => false, 'message' => 'Acceso no autorizado.']);
     exit;
 }
 
-// === ACTUALIZAR LA CONSULTA SQL PARA INCLUIR NUEVOS CAMPOS ===
-$sql_principal = "SELECT 
-            p.id AS paciente_id, p.nombre AS paciente_nombre, p.especie, p.raza, p.sexo, p.fecha_nacimiento, p.color,
-            pr.nombre AS propietario_nombre, pr.apellido, pr.telefono, pr.email, pr.direccion,
-            hc.id AS historial_id, hc.fecha_visita, hc.tipo_visita, hc.motivo_consulta, hc.diagnostico, hc.tratamiento, hc.examenes_complementarios, hc.peso_kg,
-            hc.temperatura, hc.frecuencia_cardiaca, hc.frecuencia_respiratoria, hc.proxima_cita, hc.doctor_encargado
-        FROM pacientes p
-        JOIN propietarios pr ON p.id_propietario = pr.id
-        LEFT JOIN historial_clinico hc ON p.id = hc.id_paciente
-        WHERE p.id = ?
-        ORDER BY hc.fecha_visita DESC";
+$paciente_id = isset($_GET['id']) ? intval($_GET['id']) : 0;
 
-$stmt_principal = $conn->prepare($sql_principal);
-$stmt_principal->bind_param("i", $id_paciente);
-$stmt_principal->execute();
-$result_principal = $stmt_principal->get_result();
-
-$datos_paciente = null;
-$historial_clinico = [];
-$ids_visitas = [];
-
-while ($row = $result_principal->fetch_assoc()) {
-    if ($datos_paciente === null) {
-        // ... (esta parte no cambia) ...
-        $datos_paciente = [
-            'id' => $row['paciente_id'], 'nombre' => $row['paciente_nombre'], 'especie' => $row['especie'],
-            'raza' => $row['raza'], 'sexo' => $row['sexo'], 'fecha_nacimiento' => $row['fecha_nacimiento'], 'color' => $row['color'],
-            'propietario' => [
-                'nombre' => $row['propietario_nombre'], 'apellido' => $row['apellido'], 'telefono' => $row['telefono'],
-                'email' => $row['email'], 'direccion' => $row['direccion']
-            ]
-        ];
-    }
-
-    if ($row['historial_id'] !== null) {
-        $id_visita = $row['historial_id'];
-        if (!isset($historial_clinico[$id_visita])) {
-            $ids_visitas[] = $id_visita;
-            // === AÑADIR NUEVOS CAMPOS AL ARRAY DE HISTORIAL ===
-            $historial_clinico[$id_visita] = [
-                'id' => $id_visita, 'fecha_visita' => $row['fecha_visita'], 'tipo_visita' => $row['tipo_visita'],
-                'motivo_consulta' => $row['motivo_consulta'], 'diagnostico' => $row['diagnostico'], 'tratamiento' => $row['tratamiento'],
-                'examenes_complementarios' => $row['examenes_complementarios'], // Nuevo
-                'peso_kg' => $row['peso_kg'], 'temperatura' => $row['temperatura'], 'frecuencia_cardiaca' => $row['frecuencia_cardiaca'],
-                'frecuencia_respiratoria' => $row['frecuencia_respiratoria'], 'proxima_cita' => $row['proxima_cita'],
-                'doctor_encargado' => $row['doctor_encargado'], // Nuevo
-                'archivos' => []
-            ];
-        }
-    }
-}
-$stmt_principal->close();
-
-// La lógica para obtener archivos adjuntos no cambia...
-if (!empty($ids_visitas)) {
-    $placeholders = implode(',', array_fill(0, count($ids_visitas), '?'));
-    $sql_archivos = "SELECT id, id_visita, nombre_original, ruta_archivo FROM archivos_adjuntos WHERE id_visita IN ($placeholders)";
-    
-    $stmt_archivos = $conn->prepare($sql_archivos);
-    $stmt_archivos->bind_param(str_repeat('i', count($ids_visitas)), ...$ids_visitas);
-    $stmt_archivos->execute();
-    $result_archivos = $stmt_archivos->get_result();
-
-    while ($archivo_row = $result_archivos->fetch_assoc()) {
-        $id_visita_archivo = $archivo_row['id_visita'];
-        if (isset($historial_clinico[$id_visita_archivo])) {
-            $historial_clinico[$id_visita_archivo]['archivos'][] = $archivo_row;
-        }
-    }
-    $stmt_archivos->close();
+if ($paciente_id <= 0) {
+    http_response_code(400);
+    echo json_encode(['success' => false, 'message' => 'ID de paciente no válido.']);
+    exit;
 }
 
-if ($datos_paciente === null) {
-    http_response_code(404);
-    echo json_encode(['error' => 'Paciente no encontrado.']);
+$response = ['success' => true];
+
+// 1. Obtener datos del paciente y propietario
+$sql_paciente = "SELECT p.*, pr.nombre as nombre_propietario, pr.apellido, pr.telefono, pr.email, pr.direccion 
+                 FROM pacientes p 
+                 JOIN propietarios pr ON p.id_propietario = pr.id 
+                 WHERE p.id = ?";
+$stmt_paciente = $conn->prepare($sql_paciente);
+$stmt_paciente->bind_param("i", $paciente_id);
+$stmt_paciente->execute();
+$result_paciente = $stmt_paciente->get_result();
+if ($result_paciente->num_rows > 0) {
+    $response['paciente'] = $result_paciente->fetch_assoc();
 } else {
-    $datos_paciente['historial'] = array_values($historial_clinico);
-    echo json_encode($datos_paciente);
+    http_response_code(404);
+    echo json_encode(['success' => false, 'message' => 'Paciente no encontrado.']);
+    exit;
 }
+$stmt_paciente->close();
+
+// 2. Obtener historial clínico del paciente
+$sql_historial = "SELECT hc.*, GROUP_CONCAT(vp.id_producto, ':', p.nombre, ':', vp.cantidad_usada SEPARATOR ';') as productos_utilizados
+                  FROM historial_clinico hc
+                  LEFT JOIN visita_productos vp ON hc.id = vp.id_visita
+                  LEFT JOIN productos p ON vp.id_producto = p.id
+                  WHERE hc.id_paciente = ?
+                  GROUP BY hc.id
+                  ORDER BY hc.fecha_visita DESC";
+$stmt_historial = $conn->prepare($sql_historial);
+$stmt_historial->bind_param("i", $paciente_id);
+$stmt_historial->execute();
+$result_historial = $stmt_historial->get_result();
+$response['historial'] = $result_historial->fetch_all(MYSQLI_ASSOC);
+$stmt_historial->close();
+
 
 $conn->close();
+echo json_encode($response);
 ?>
