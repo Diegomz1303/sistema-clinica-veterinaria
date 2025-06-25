@@ -1,0 +1,9 @@
+## Ignorar la carpeta donde se suben los archivos de los pacientes
+/backend/uploads/
+
+## Ignorar archivos de configuración de editores
+.vscode/
+
+## Ignorar archivos del sistema operativo
+.DS_Store
+Thumbs.db
