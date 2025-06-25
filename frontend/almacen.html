@@ -1,53 +1,60 @@
-<a href="index.html">Pacientes</a>
-<a href="almacen.html">Almacén</a> ```
-
-**2. Crear la página `almacen.html`:**
-Crea un nuevo archivo en la carpeta `frontend`.
-
-**Nuevo archivo:** `frontend/almacen.html`
-```html
 <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Almacén - Veterinaria Alvarez</title>
     <link rel="stylesheet" href="css/estilos_comunes.css">
     <link rel="stylesheet" href="css/index_estilos.css">
-    <link rel="stylesheet" href="css/almacen_estilos.css"> </head>
+    <link rel="stylesheet" href="css/almacen_estilos.css">
+</head>
 <body>
     <header>
-        <h1>Historial Clínico - Veterinaria Alvarez</h1>
+        <div class="logo-container">
+            <img src="img/logo_veterinaria.jpg" alt="Logo Veterinaria Alvarez">
+            <h1>Veterinaria Alvarez</h1>
+        </div>
+        
         <nav>
             <a href="index.html">Pacientes</a>
             <a href="almacen.html" class="active">Almacén</a>
         </nav>
-        <div class="user-info">
-            <span id="username-placeholder"></span>
-            <button id="btn-logout" class="btn btn-danger">Cerrar Sesión</button>
+
+        <div class="user-session">
+            <span id="username-placeholder">admin</span>
+            <button id="btn-logout" class="boton-secundario">Cerrar Sesión</button>
         </div>
     </header>
 
     <main>
-        <h2>Gestión de Almacén</h2>
-        <div class="toolbar">
-            <input type="text" id="inputBusqueda" placeholder="Buscar por nombre o lote...">
-            <button id="btnNuevoProducto" class="btn btn-primary">Añadir Nuevo Producto</button>
+        <div class="controles-tabla">
+            <h2>Gestión de Almacén</h2>
+            <div class="acciones-derecha">
+                <div class="search-wrapper">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="search-icon"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                    <input type="text" id="inputBusqueda" placeholder="Buscar por nombre o lote...">
+                </div>
+                <button id="btnNuevoProducto" class="boton-primario">Añadir Nuevo Producto</button>
+            </div>
         </div>
-        <table>
-            <thead>
-                <tr>
-                    <th>Nombre</th>
-                    <th>Tipo</th>
-                    <th>Stock</th>
-                    <th>Precio Venta</th>
-                    <th>Lote</th>
-                    <th>Caducidad</th>
-                    <th>Acciones</th>
-                </tr>
-            </thead>
-            <tbody id="productos-tbody">
-                </tbody>
-        </table>
+
+        <div class="tabla-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Nombre</th>
+                        <th>Tipo</th>
+                        <th>Stock</th>
+                        <th>Precio Venta</th>
+                        <th>Lote</th>
+                        <th>Caducidad</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody id="productos-tbody">
+                    </tbody>
+            </table>
+        </div>
         <div id="pagination-controls" class="pagination-controls"></div>
     </main>
 
@@ -97,7 +104,7 @@ Crea un nuevo archivo en la carpeta `frontend`.
                     <label for="descripcion">Descripción:</label>
                     <textarea id="descripcion" name="descripcion" rows="3"></textarea>
                 </div>
-                <button type="submit" class="btn btn-primary">Guardar Producto</button>
+                <button type="submit" class="boton-primario">Guardar Producto</button>
             </form>
         </div>
     </div>

@@ -234,3 +234,33 @@ header {
 .user-session span {
     display: none;
 }
+
+/* --- Estilos para la Barra de Navegación --- */
+header nav {
+    flex-grow: 1; /* Permite que la navegación ocupe el espacio central */
+    text-align: center; /* Centra los enlaces */
+}
+
+header nav a {
+    color: var(--color-texto-secundario); /* Color gris para los enlaces */
+    text-decoration: none; /* Quita el subrayado */
+    font-weight: 600; /* Texto en negrita */
+    font-size: 1.1em;
+    padding: 8px 20px;
+    margin: 0 5px;
+    border-radius: 8px;
+    transition: all 0.3s ease; /* Transición suave para el hover */
+}
+
+/* Estilo para cuando pasas el mouse por encima */
+header nav a:hover {
+    color: var(--color-primario); /* Cambia al color rojo principal */
+    background-color: #fdeeee; /* Un fondo rojo muy pálido */
+}
+
+/* Estilo para el enlace de la página activa */
+header nav a.active {
+    color: var(--color-primario);
+    border-bottom: 3px solid var(--color-primario);
+    border-radius: 8px 8px 0 0; /* Redondea solo las esquinas superiores */
+}

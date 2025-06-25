@@ -10,18 +10,20 @@
 </head>
 <body>
 
-    <header>
-        <div class="logo-container">
-            <img src="img/logo_veterinaria.jpg" alt="Logo Veterinaria Alvarez">
-            <h1>Veterinaria Alvarez - Historial Clínico</h1>
-        </div>
-        <!-- Este contenedor debe estar dentro del header -->
-        <div class="user-session">
-            <!-- Añadimos el span de nuevo para compatibilidad con JS, pero lo ocultaremos -->
-            <span style="display: none;">Bienvenido, <strong id="username-display"></strong></span>
-            <button id="btn-logout" class="boton-secundario">Cerrar Sesión</button>
-        </div>
-    </header>
+<header>
+    <div class="logo-container">
+        <img src="img/logo_veterinaria.jpg" alt="Logo Veterinaria Alvarez">
+        <h1>Veterinaria Alvarez - Historial Clínico</h1>
+    </div>
+    <nav>
+        <a href="index.html" class="active">Pacientes</a>
+        <a href="almacen.html">Almacén</a>
+    </nav>
+    <div class="user-session">
+        <span style="display: none;">Bienvenido, <strong id="username-display"></strong></span>
+        <button id="btn-logout" class="boton-secundario">Cerrar Sesión</button>
+    </div>
+</header>
 
     <main>
         <section id="lista-pacientes">

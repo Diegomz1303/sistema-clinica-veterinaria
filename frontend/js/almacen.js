@@ -3,18 +3,19 @@ document.addEventListener('DOMContentLoaded', async () => {
     const usernamePlaceholder = document.getElementById('username-placeholder');
     const btnLogout = document.getElementById('btn-logout');
     
-    try {
-        const sessionResponse = await fetch('../backend/api_check_session.php');
-        const sessionData = await sessionResponse.json();
-        if (!sessionData.success) {
-            window.location.href = 'login.html';
-            return;
-        }
-        usernamePlaceholder.textContent = sessionData.username || 'Usuario';
-    } catch (error) {
+ // CÓDIGO CORREGIDO
+try {
+    const sessionResponse = await fetch('../backend/api_check_session.php');
+    const sessionData = await sessionResponse.json();
+    if (!sessionData.loggedIn) { // <--- LÍNEA CORREGIDA
         window.location.href = 'login.html';
         return;
     }
+    usernamePlaceholder.textContent = sessionData.username || 'Usuario';
+} catch (error) {
+    window.location.href = 'login.html';
+    return;
+}
 
     btnLogout.addEventListener('click', async () => {
         const response = await fetch('../backend/api_logout.php');
