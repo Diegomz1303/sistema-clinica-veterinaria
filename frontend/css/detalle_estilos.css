@@ -56,58 +56,40 @@ main {
     color: var(--color-texto-secundario);
 }
 
-.form-row {
-    display: flex;
-    gap: 1rem;
-    margin-bottom: 1rem;
-}
-
-.form-row .form-group {
-    flex: 1;
-    margin-bottom: 0;
-}
-
-#form-nueva-visita > label {
-    display: block;
-    margin-bottom: 0.5rem;
-    font-weight: 500;
-    font-size: 0.9em;
-    color: var(--color-primario);
-    margin-top: 1rem;
-}
-
-#form-nueva-visita button.boton-primario {
-    width: 100%;
-    margin-top: 1rem;
-}
-
-/* --- Estilos para la lista de visitas y el modal de detalles --- */
-.visita-resumen {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+/* --- ESTILOS PARA LAS TARJETAS DE VISITAS ANTERIORES (CORREGIDO) --- */
+.visita-card {
+    display: block; /* Cambiado a block para que el contenido se organice verticalmente */
     padding: 1rem;
     background-color: #f8f9fa;
     border-radius: 8px;
-    margin-bottom: 0.5rem;
+    margin-bottom: 0.75rem; /* Aumenta el espacio entre tarjetas */
+    border-left: 5px solid var(--color-secundario); /* Añade un acento de color */
     cursor: pointer;
-    transition: background-color 0.2s ease, box-shadow 0.2s ease;
+    transition: all 0.2s ease;
 }
 
-.visita-resumen:hover {
+.visita-card:hover {
     background-color: #e9ecef;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.07);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.09);
+    border-left-color: var(--color-primario);
 }
 
-.visita-resumen h5 {
-    margin: 0;
+.visita-card .visita-header strong {
+    font-size: 1em;
     font-weight: 600;
+    color: var(--color-texto-principal);
+    display: block; /* Hace que ocupe toda la línea */
 }
 
-.visita-resumen .fecha {
+.visita-card .visita-header span {
     font-size: 0.9em;
     color: var(--color-texto-secundario);
+    display: block; /* Lo pone en una nueva línea */
+    margin-top: 4px;
 }
+
+
+/* --- Estilos para el modal de detalles --- */
 
 .detalle-linea {
     margin-bottom: 0.75rem;
@@ -115,6 +97,13 @@ main {
 
 .detalle-linea strong {
     color: var(--color-texto-principal);
+}
+
+#modal-visita-detalle .info-card hr {
+    border: 0;
+    height: 1px;
+    background-color: var(--color-borde);
+    margin: 1.5rem 0;
 }
 
 #visita-archivos-lista {
@@ -156,6 +145,19 @@ main {
     margin-top: 15px;
 }
 
+/* --- CORRECCIÓN PARA SIGNOS VITALES --- */
+.form-row {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+.form-row .form-group {
+    flex: 1;
+    margin-bottom: 0;
+}
+
+
 .search-producto-wrapper {
     position: relative;
 }
@@ -196,7 +198,7 @@ main {
     align-items: center;
     background-color: #f9f9f9;
     padding: 8px;
-    border-radius: var(--border-radius);
+    border-radius: 8px; /* Era var(--border-radius), lo estandarizo */
     margin-bottom: 5px;
 }
 
@@ -208,8 +210,9 @@ main {
 .producto-seleccionado-item button {
     background: none;
     border: none;
-    color: var(--color-peligro);
-    font-size: 18px;
+    color: var(--color-primario); /* Color primario en lugar de rojo peligro */
+    font-size: 20px;
+    font-weight: bold;
     cursor: pointer;
+    line-height: 1;
 }
-
