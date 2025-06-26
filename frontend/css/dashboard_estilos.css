@@ -1,0 +1,100 @@
+/* frontend/css/dashboard_estilos.css */
+
+main {
+    max-width: 1600px;
+    margin: 2rem auto;
+    padding: 1.5rem;
+    background: none;
+    box-shadow: none;
+}
+
+/* Grid para las tarjetas de KPIs */
+.kpi-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.kpi-card {
+    background-color: var(--color-superficie);
+    padding: 1.5rem;
+    border-radius: 12px;
+    box-shadow: var(--sombra-caja);
+    border-left: 5px solid var(--color-primario);
+}
+
+.kpi-card h4 {
+    margin: 0 0 0.5rem 0;
+    font-size: 1em;
+    font-weight: 600;
+    color: var(--color-texto-secundario);
+}
+
+.kpi-card p {
+    margin: 0;
+    font-size: 2.5em;
+    font-weight: 700;
+    color: var(--color-texto-principal);
+}
+
+/* Grid para los gráficos */
+.charts-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr; /* El primer gráfico ocupa el doble de espacio */
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+/* Grid para las listas */
+.lists-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+    gap: 1.5rem;
+}
+
+.chart-container, .list-container {
+    background-color: var(--color-superficie);
+    padding: 1.5rem 2rem;
+    border-radius: 12px;
+    box-shadow: var(--sombra-caja);
+}
+
+.chart-container h3, .list-container h3 {
+    margin-top: 0;
+    margin-bottom: 1.5rem;
+    font-size: 1.2em;
+    border-bottom: 1px solid var(--color-borde);
+    padding-bottom: 0.75rem;
+}
+
+/* Estilos para las tablas de listas rápidas */
+.list-container table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.list-container th, .list-container td {
+    padding: 0.8rem 0.5rem;
+    border-bottom: 1px solid var(--color-borde);
+    text-align: left;
+}
+
+.list-container thead th {
+    font-weight: 600;
+    font-size: 0.85em;
+    color: var(--color-texto-secundario);
+}
+
+.list-container tbody tr:last-child td {
+    border-bottom: none;
+}
+
+
+.charts-grid {
+    display: grid;
+    /* ESTA ES LA LÍNEA QUE DEBES CAMBIAR */
+    grid-template-columns: 1fr 1fr; /* Dividimos el espacio en dos columnas iguales */
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}

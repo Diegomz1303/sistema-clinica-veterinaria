@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Veterinaria Alvarez</title>
+    <link rel="stylesheet" href="css/estilos_comunes.css">
+    <link rel="stylesheet" href="css/dashboard_estilos.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="js/dashboard.js" defer></script>
+</head>
+<body>
+
+    <aside id="sidebar-menu">
+        <div class="sidebar-header">
+            <img src="img/logo_veterinaria.jpg" alt="Logo Veterinaria Alvarez">
+            <h2>Veterinaria Alvarez</h2>
+        </div>
+        <nav class="sidebar-nav">
+            <a href="dashboard.html" class="active">Dashboard</a>
+            <a href="index.html">Pacientes</a>
+            <a href="almacen.html">Almacén</a>
+        </nav>
+        <div class="sidebar-footer">
+            <span id="username-sidebar">admin</span>
+            <button id="btn-logout" class="boton-secundario">Cerrar Sesión</button>
+        </div>
+    </aside>
+
+    <div id="main-container">
+        <header>
+            <button id="menu-toggle">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+            </button>
+            <div class="logo-container">
+                <h1>Dashboard Principal</h1>
+            </div>
+            <div class="user-session-placeholder"></div>
+        </header>
+
+        <main>
+            <section class="kpi-grid">
+                <div class="kpi-card">
+                    <h4>Total de Pacientes</h4>
+                    <p id="kpi-total-pacientes">Cargando...</p>
+                </div>
+                <div class="kpi-card">
+                    <h4>Visitas del Mes</h4>
+                    <p id="kpi-visitas-mes">Cargando...</p>
+                </div>
+                <div class="kpi-card">
+                    <h4>Productos Bajos de Stock</h4>
+                    <p id="kpi-productos-bajos">Cargando...</p>
+                </div>
+                <div class="kpi-card">
+                    <h4>Nuevos Pacientes (30d)</h4>
+                    <p id="kpi-nuevos-pacientes">Cargando...</p>
+                </div>
+            </section>
+
+            <section class="charts-grid">
+                <div class="chart-container">
+                    <h3>Tipos de Visita</h3>
+                    <canvas id="chart-tipos-visita"></canvas>
+                </div>
+                <div class="chart-container">
+                    <h3>Productos Más Usados</h3>
+                    <canvas id="chart-productos-usados"></canvas>
+                </div>
+            </section>
+
+            <section class="lists-grid">
+                <div class="list-container">
+                    <h3>Últimas Visitas Registradas</h3>
+                    <table id="lista-ultimas-visitas">
+                        <thead>
+                            <tr>
+                                <th>Fecha</th>
+                                <th>Paciente</th>
+                                <th>Motivo</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                           </tbody>
+                    </table>
+                </div>
+                <div class="list-container">
+                    <h3>Productos por Agotarse</h3>
+                    <table id="lista-productos-bajos">
+                         <thead>
+                            <tr>
+                                <th>Producto</th>
+                                <th>Stock Actual</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                           </tbody>
+                    </table>
+                </div>
+            </section>
+        </main>
+    </div>
+
+</body>
+</html>
