@@ -8,7 +8,7 @@ main {
     box-shadow: none;
 }
 
-/* Grid para las tarjetas de KPIs */
+/* --- Estilos para las Tarjetas KPI --- */
 .kpi-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
@@ -22,6 +22,7 @@ main {
     border-radius: 12px;
     box-shadow: var(--sombra-caja);
     border-left: 5px solid var(--color-primario);
+    height: 100%; 
 }
 
 .kpi-card h4 {
@@ -38,26 +39,75 @@ main {
     color: var(--color-texto-principal);
 }
 
-/* Grid para los gráficos */
+.kpi-link {
+    text-decoration: none;
+    color: inherit;
+    display: flex;
+}
+
+.kpi-link .kpi-card {
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    width: 100%;
+}
+
+.kpi-link:hover .kpi-card {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+}
+
+.kpi-link.disabled-link {
+    cursor: default;
+}
+
+.kpi-link.disabled-link:hover .kpi-card {
+    transform: none;
+    box-shadow: var(--sombra-caja);
+}
+
+
+/* --- Grids y Contenedores de Gráficos --- */
 .charts-grid {
     display: grid;
-    grid-template-columns: 2fr 1fr; /* El primer gráfico ocupa el doble de espacio */
+    grid-template-columns: 1fr 1fr;
     gap: 1.5rem;
     margin-bottom: 2rem;
+    margin-top: 3rem; 
+    align-items: start; 
 }
 
-/* Grid para las listas */
-.lists-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
-    gap: 1.5rem;
-}
-
-.chart-container, .list-container {
+.chart-container {
     background-color: var(--color-superficie);
     padding: 1.5rem 2rem;
     border-radius: 12px;
     box-shadow: var(--sombra-caja);
+    height: 400px; 
+    display: flex;
+    flex-direction: column;
+}
+
+.chart-container canvas {
+    max-height: 100%;
+}
+
+
+/* --- Grids y Contenedores de Listas (CORREGIDO) --- */
+.lists-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+    gap: 1.5rem;
+    /* NUEVO: Fuerza a los items a tener la misma altura */
+    align-items: stretch; 
+}
+
+.list-container {
+    background-color: var(--color-superficie);
+    padding: 1.5rem 2rem;
+    border-radius: 12px;
+    box-shadow: var(--sombra-caja);
+    /* NUEVO: Hacemos que el contenedor sea flexible verticalmente */
+    display: flex;
+    flex-direction: column;
 }
 
 .chart-container h3, .list-container h3 {
@@ -90,11 +140,40 @@ main {
     border-bottom: none;
 }
 
+/* --- Media Queries para Responsividad --- */
+@media (max-width: 1200px) {
+    .charts-grid {
+        grid-template-columns: 1fr;
+    }
+}
 
-.charts-grid {
-    display: grid;
-    /* ESTA ES LA LÍNEA QUE DEBES CAMBIAR */
-    grid-template-columns: 1fr 1fr; /* Dividimos el espacio en dos columnas iguales */
-    gap: 1.5rem;
-    margin-bottom: 2rem;
+@media (max-width: 992px) {
+    .lists-grid {
+        grid-template-columns: 1fr;
+    }
+    .chart-container {
+        height: 350px;
+    }
+}
+
+@media (max-width: 768px) {
+    main {
+        margin: 1rem;
+        padding: 1rem;
+    }
+    .kpi-grid,
+    .charts-grid,
+    .lists-grid {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+    .kpi-card p {
+        font-size: 2.2em;
+    }
+    .chart-container, .list-container {
+        padding: 1rem;
+    }
+    .chart-container {
+        height: 300px;
+    }
 }
