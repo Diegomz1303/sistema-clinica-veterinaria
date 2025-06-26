@@ -1,4 +1,4 @@
-// frontend/js/almacen.js - CÓDIGO ACTUALIZADO CON FILTROS
+// frontend/js/almacen.js - CÓDIGO FINAL CON NAVEGACIÓN SUAVE
 
 document.addEventListener('DOMContentLoaded', async () => {
 
@@ -12,18 +12,19 @@ document.addEventListener('DOMContentLoaded', async () => {
         });
     }
 
+    // NUEVO: Cerrar menú al hacer clic en un enlace y navegar suavemente
     if (sidebar) {
         const navLinks = sidebar.querySelectorAll('.sidebar-nav a');
         navLinks.forEach(link => {
             link.addEventListener('click', function(event) {
-                event.preventDefault(); 
+                event.preventDefault(); // Prevenir la navegación inmediata
                 const href = this.href;
 
                 if (document.body.classList.contains('sidebar-open')) {
                     document.body.classList.remove('sidebar-open');
                     setTimeout(() => {
                         window.location.href = href;
-                    }, 300); 
+                    }, 300); // Esperar la animación de 300ms
                 } else {
                     window.location.href = href;
                 }
@@ -52,7 +53,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         return;
     }
 
-    // --- 3. ELEMENTOS DE LA PÁGINA Y LECTURA DE FILTROS ---
+    // --- 3. ELEMENTOS DE LA PÁGINA DE ALMACÉN ---
     const productosTbody = document.getElementById('productos-tbody');
     const inputBusqueda = document.getElementById('inputBusqueda');
     const paginationControls = document.getElementById('pagination-controls');
@@ -64,15 +65,10 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     let currentPage = 1;
 
-    // **NUEVO**: Leemos el parámetro 'filter' de la URL cuando la página carga
-    const urlParams = new URLSearchParams(window.location.search);
-    const initialFilter = urlParams.get('filter') || '';
-
-    // --- 4. FUNCIÓN PARA CARGAR PRODUCTOS (MODIFICADA) ---
-    async function cargarProductos(page = 1, searchTerm = '', filter = '') {
+    // --- 4. FUNCIÓN PARA CARGAR PRODUCTOS ---
+    async function cargarProductos(page = 1, searchTerm = '') {
         currentPage = page;
-        // **MODIFICADO**: Añadimos el parámetro 'filter' a la llamada de la API
-        const url = `../backend/api_get_productos.php?page=${page}&search=${encodeURIComponent(searchTerm)}&filter=${filter}`;
+        const url = `../backend/api_get_productos.php?page=${page}&search=${encodeURIComponent(searchTerm)}`;
         try {
             const response = await fetch(url);
             if (!response.ok) throw new Error('Error al cargar los productos');
@@ -111,31 +107,26 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
     }
 
-    // --- 5. PAGINACIÓN Y BÚSQUEDA (MODIFICADA) ---
+    // --- 5. PAGINACIÓN Y BÚSQUEDA ---
     function renderPagination(pagination) {
         paginationControls.innerHTML = '';
         if (pagination.totalPages <= 1) return;
         const prevButton = document.createElement('button');
         prevButton.textContent = 'Anterior';
         prevButton.disabled = pagination.currentPage === 1;
-        // **MODIFICADO**: Pasamos el filtro al cambiar de página
-        prevButton.onclick = () => cargarProductos(pagination.currentPage - 1, inputBusqueda.value, initialFilter);
+        prevButton.onclick = () => cargarProductos(pagination.currentPage - 1, inputBusqueda.value);
         paginationControls.appendChild(prevButton);
-
         const pageInfo = document.createElement('span');
         pageInfo.textContent = `Página ${pagination.currentPage} de ${pagination.totalPages}`;
         pageInfo.style.margin = '0 15px';
         paginationControls.appendChild(pageInfo);
-
         const nextButton = document.createElement('button');
         nextButton.textContent = 'Siguiente';
         nextButton.disabled = pagination.currentPage === pagination.totalPages;
-        // **MODIFICADO**: Pasamos el filtro al cambiar de página
-        nextButton.onclick = () => cargarProductos(pagination.currentPage + 1, inputBusqueda.value, initialFilter);
+        nextButton.onclick = () => cargarProductos(pagination.currentPage + 1, inputBusqueda.value);
         paginationControls.appendChild(nextButton);
     }
-    // **MODIFICADO**: Pasamos el filtro al buscar
-    inputBusqueda.addEventListener('input', () => cargarProductos(1, inputBusqueda.value, initialFilter));
+    inputBusqueda.addEventListener('input', () => cargarProductos(1, inputBusqueda.value));
 
     // --- 6. MODALES Y FORMULARIOS ---
     btnNuevoProducto.onclick = () => {
@@ -158,7 +149,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             const result = await response.json();
             if (result.success) {
                 modal.style.display = 'none';
-                cargarProductos(currentPage, inputBusqueda.value, initialFilter);
+                cargarProductos(currentPage, inputBusqueda.value);
             } else {
                 alert('Error: ' + (result.message || 'Ocurrió un error.'));
             }
@@ -174,7 +165,6 @@ document.addEventListener('DOMContentLoaded', async () => {
         if (!row) return;
         const id = row.dataset.id;
         if (target.classList.contains('btn-editar')) {
-            // Esta llamada a la API no necesita el filtro, así que está bien como está
             const response = await fetch(`../backend/api_get_productos.php?id=${id}`);
             const result = await response.json();
             const producto = result.data[0];
@@ -200,7 +190,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                     const response = await fetch('../backend/api_delete_producto.php', { method: 'POST', body: formData });
                     const result = await response.json();
                     if (result.success) {
-                        cargarProductos(currentPage, inputBusqueda.value, initialFilter);
+                        cargarProductos(currentPage, inputBusqueda.value);
                     } else {
                         alert('Error al eliminar: ' + result.message);
                     }
@@ -211,6 +201,6 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
     });
 
-    // **MODIFICADO**: Carga inicial de datos, pasando el filtro de la URL
-    cargarProductos(1, '', initialFilter);
+    // Carga inicial de datos
+    cargarProductos();
 });
